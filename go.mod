@@ -1,3 +1,3 @@
-module api/index.go
+module main.go
 
 go 1.26.1
