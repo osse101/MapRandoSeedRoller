@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/osse101/MapRandoSeedRoller/api/preset"
+	"main.go/api/preset"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request){
@@ -41,6 +41,7 @@ func Handler(w http.ResponseWriter, r *http.Request){
 	// Respond
 	w.WriteHeader(http.StatusOK)
 	w.Write(seedLink)
+	return 
 }
 
 func route(name string)(preset.Preset, error){
@@ -50,7 +51,6 @@ func route(name string)(preset.Preset, error){
 		return &preset.Race{}, nil
 	case "mentor":
 		return &preset.Simple{Data:nil}, nil
-	default:
-		return nil, fmt.Errorf("unkown preset: %s", name)
 	}
+	return nil, fmt.Errorf("unkown preset: %s", name)
 }
