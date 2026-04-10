@@ -8,7 +8,6 @@ import (
 	"maprandoseedroller/lib"
 	"maprandoseedroller/preset"
 	"net/http"
-	"os"
 )
 
 type Request struct {
@@ -47,8 +46,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to build settings", http.StatusInternalServerError)
 		return
 	}
-	baseURL := buildSite(req.Dev)
-	spoilerToken := buildSpoilerToken()
+	baseURL := lib.BuildSite(req.Dev)
+	spoilerToken := lib.BuildSpoilerToken()
 	fmt.Printf("Using site: %s\n", baseURL)
 
 	seedURL, err := lib.Randomize(baseURL, settings, spoilerToken)
@@ -109,17 +108,6 @@ func buildSettings(p preset.Preset, race bool) ([]byte, error) {
 		}
 	}
 	return settings, nil
-}
-
-func buildSpoilerToken() string {
-	return os.Getenv("SPOILER_TOKEN")
-}
-
-func buildSite(isDev bool) string {
-	if isDev {
-		return "https://dev.maprando.com"
-	}
-	return "https://maprando.com"
 }
 
 func writeResponse(seedURL string, w http.ResponseWriter) error {
