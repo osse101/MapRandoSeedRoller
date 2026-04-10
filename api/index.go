@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"maprandoseedroller/api/preset"
+	"maprandoseedroller/lib"
+	"maprandoseedroller/preset"
 	"net/http"
 	"os"
 )
@@ -22,16 +23,16 @@ type Response struct {
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST to / with a preset name.")
+		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a preset name.")
 		return
 	}
-	var req Request
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+
+	req, err := decode(r)
+	if err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
 	fmt.Printf("Received request: %+v\n", req)
-	defer r.Body.Close()
 
 	p, err := route(req.Preset)
 	if err != nil {
@@ -41,41 +42,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("Selected preset: %T\n", p)
 
-	settings, err := p.Settings()
+	settings, err := buildSettings(p, req.Race)
 	if err != nil {
-		http.Error(w, "failed to load settings", http.StatusInternalServerError)
+		http.Error(w, "failed to build settings", http.StatusInternalServerError)
 		return
 	}
+	baseURL := buildSite(req.Dev)
+	spoilerToken := buildSpoilerToken()
+	fmt.Printf("Using site: %s\n", baseURL)
 
-	// Modify race mode if requested
-	if req.Race {
-		var s map[string]interface{}
-		if err := json.Unmarshal(settings, &s); err != nil {
-			http.Error(w, "failed to parse settings", http.StatusInternalServerError)
-			return
-		}
-		s["race_mode"] = true
-		settings, err = json.Marshal(s)
-		if err != nil {
-			http.Error(w, "failed to encode modified settings", http.StatusInternalServerError)
-			return
-		}
-		fmt.Println("Race mode enabled in settings")
-	}
-
-	site := "main"
-	if req.Dev {
-		site = "dev"
-	}
-
-	spoilerToken := os.Getenv("SPOILER_TOKEN")
-	if spoilerToken == "" {
-		spoilerToken = "default_token_please_set_env_var"
-	}
-
-	fmt.Printf("Using site: %s\n", site)
-	//seedURL, err := Randomize(site, settings, spoilerToken)
-	seedURL := "https://maprando.com/seed/1234567890"
+	seedURL, err := lib.Randomize(baseURL, settings, spoilerToken)
 	if err != nil {
 		fmt.Printf("Randomization failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)
@@ -83,22 +59,74 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("Randomization successful: %s\n", seedURL)
 
-	res := Response{
-		SeedURL: seedURL,
+	err = writeResponse(seedURL, w)
+	if err != nil {
+		http.Error(w, "failed to write response", http.StatusInternalServerError)
+		return
 	}
+}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(res)
+func decode(r *http.Request) (*Request, error) {
+	var req Request
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return nil, err
+	}
+	defer r.Body.Close()
+	return &req, nil
+}
+
+var presets = map[string]preset.Preset{
+	"s4": &preset.Season4{},
+	"season4": &preset.Season4{},
+	"community race season 4": &preset.Season4{},
+	"mentor": &preset.Mentor{},
+	"mentor tournament": &preset.Mentor{},
+	"default": &preset.Default{},
 }
 
 func route(name string) (preset.Preset, error) {
-	switch strings.ToLower(name) {
-	case "s4", "season4", "community race season 4":
-		return &preset.Season4{}, nil
-	case "mentor", "mentor tournament":
-		return &preset.Mentor{}, nil
-	case "default":
-		return &preset.Default{}, nil
+	p, ok := presets[strings.ToLower(name)]
+	if !ok {
+		return nil, fmt.Errorf("unknown preset: %s", name)
 	}
-	return nil, fmt.Errorf("unknown preset: %s", name)
+	return p, nil
+}
+
+func buildSettings(p preset.Preset, race bool) ([]byte, error) {
+	settings, err := p.Settings()
+	if err != nil {
+		return nil, err
+	}
+	if race {
+		var s map[string]interface{}
+		if err := json.Unmarshal(settings, &s); err != nil {
+			return nil, err
+		}
+		s["race_mode"] = true
+		settings, err = json.Marshal(s)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return settings, nil
+}
+
+func buildSpoilerToken() string {
+	return os.Getenv("SPOILER_TOKEN")
+}
+
+func buildSite(isDev bool) string {
+	if isDev {
+		return "https://dev.maprando.com"
+	}
+	return "https://maprando.com"
+}
+
+func writeResponse(seedURL string, w http.ResponseWriter) error {
+	res := Response{
+		SeedURL: seedURL,
+	}
+	w.Header().Set("Content-Type", "text/plain")
+	json.NewEncoder(w).Encode(res)
+	return nil
 }

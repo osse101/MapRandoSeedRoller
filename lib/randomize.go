@@ -1,4 +1,4 @@
-package api
+package lib
 
 import (
 	"bytes"
@@ -8,12 +8,7 @@ import (
 	"net/textproto"
 )
 
-func Randomize(site string, settings []byte, spoilerToken string) (string, error) {
-	baseURL := "https://maprando.com"
-	if site == "dev" {
-		baseURL = "https://dev.maprando.com"
-	}
-
+func Randomize(baseURL string, settings []byte, spoilerToken string) (string, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
