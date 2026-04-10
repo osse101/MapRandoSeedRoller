@@ -2,10 +2,12 @@ package lib
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
+	"strings"
 )
 
 func Randomize(baseURL string, settings []byte, spoilerToken string) (string, error) {
@@ -15,7 +17,7 @@ func Randomize(baseURL string, settings []byte, spoilerToken string) (string, er
 	// Settings file
 	h := make(textproto.MIMEHeader)
 	h.Set("Content-Disposition", `form-data; name="settings"; filename="settings.json"`)
-	h.Set("Content-Type", "application/json")
+	h.Set("Content-Type", "text/plain")
 	part, err := writer.CreatePart(h)
 	if err != nil {
 		return "", err
@@ -37,13 +39,7 @@ func Randomize(baseURL string, settings []byte, spoilerToken string) (string, er
 	}
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 
-	// Client that doesn't follow redirects so we can grab the Location header
-	client := &http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			return http.ErrUseLastResponse
-		},
-	}
-
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Printf("HTTP request failed: %v\n", err)
@@ -52,20 +48,21 @@ func Randomize(baseURL string, settings []byte, spoilerToken string) (string, er
 	fmt.Printf("Response status: %s\n", resp.Status)
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusFound {
+	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("unexpected status: %s", resp.Status)
 	}
 
-	location := resp.Header.Get("Location")
-	fmt.Printf("Location header: %s\n", location)
-	if location == "" {
-		return "", fmt.Errorf("no location header in response")
+	var result struct {
+		SeedURL string `json:"seed_url"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", fmt.Errorf("failed to decode response JSON: %v", err)
 	}
 
-	// If it's a relative URL, prepend baseURL
-	if location[0] == '/' {
-		location = baseURL + location
+	seedURL := result.SeedURL
+	if strings.HasPrefix(seedURL, "/") {
+		seedURL = baseURL + seedURL
 	}
 
-	return location, nil
+	return seedURL, nil
 }

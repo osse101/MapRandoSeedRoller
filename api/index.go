@@ -126,7 +126,7 @@ func writeResponse(seedURL string, w http.ResponseWriter) error {
 	res := Response{
 		SeedURL: seedURL,
 	}
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
 	return nil
 }
