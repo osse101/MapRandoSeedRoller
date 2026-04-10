@@ -1,5 +1,5 @@
 package preset
 
-type Preset interface{
-	Transform(input string)([]byte, error)
+type Preset interface {
+	Settings() ([]byte, error)
 }

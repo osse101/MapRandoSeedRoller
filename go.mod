@@ -1,3 +1,3 @@
-module main.go
+module maprandoseedroller
 
 go 1.26.1
