@@ -3,10 +3,12 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 
+	// Initialize the global slog logger definition
+	_ "maprandoseedroller/lib/logger"
 	"maprandoseedroller/lib/models"
 	"maprandoseedroller/lib/workflow"
 	"maprandoseedroller/preset"
@@ -35,15 +37,15 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
-	log.Printf("Received request: %+v\n", req)
+	slog.Info("Received request", slog.Any("request", req))
 
 	result, err := roller.ExecuteRoll(*req)
 	if err != nil {
-		log.Printf("Randomization failed: %v\n", err)
+		slog.Error("Randomization failed", slog.Any("error", err))
 		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)
 		return
 	}
-	log.Printf("Randomization successful: %s\n", result)
+	slog.Info("Randomization successful", slog.Any("result", result))
 
 	err = writeResponse(result.SeedURL, w)
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 
 type mockRoller struct{}
 
-func (m mockRoller) ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
+func (m mockRoller) ExecuteRoll(_ models.RequestIn) (models.ResponseOut, error) {
 	return models.ResponseOut{SeedURL: "http://mock-seed-url.com/123"}, nil
 }
 

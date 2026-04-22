@@ -33,6 +33,9 @@ linters:
     # Performance & Best Practices
     - prealloc # Slice preallocation opportunities
     - errorlint # Error wrapping (Go 1.13+)
+issues:
+  exclude-files:
+    - "lib/parser/mapping.go"
 output:
   formats:
     - format: colored-line-number

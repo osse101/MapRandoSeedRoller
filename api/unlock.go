@@ -3,12 +3,14 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"maprandoseedroller/lib"
+	// Initialize the global slog logger definition
+	_ "maprandoseedroller/lib/logger"
 )
 
 type UnlockURL struct {
@@ -35,11 +37,11 @@ func UnlockHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("invalid request: %v", err), http.StatusBadRequest)
 		return
 	}
-	log.Printf("Received unlock request: %+v\n", req)
+	slog.Info("Received unlock request", slog.Any("request", req))
 
 	msg, err := sendUnlockRequest(*req)
 	if err != nil {
-		log.Printf("Unlock failed: %v\n", err)
+		slog.Error("Unlock failed", slog.Any("error", err))
 		http.Error(w, fmt.Sprintf("unlock failed: %v", err), http.StatusInternalServerError)
 		return
 	}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
@@ -20,7 +20,7 @@ func MakeRequest(baseURL string, settings models.RequestMapRando) (string, error
 		return "", err
 	}
 
-	log.Printf("Sending request to: %s/randomize\n", baseURL)
+	slog.Info("Sending request", slog.String("endpoint", baseURL+"/randomize"))
 	req, err := http.NewRequest("POST", baseURL+"/randomize", body)
 	if err != nil {
 		return "", err
@@ -30,10 +30,10 @@ func MakeRequest(baseURL string, settings models.RequestMapRando) (string, error
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("HTTP request failed: %v\n", err)
+		slog.Error("HTTP request failed", slog.Any("error", err))
 		return "", err
 	}
-	log.Printf("Response status: %s\n", resp.Status)
+	slog.Info("Response received", slog.String("status", resp.Status))
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
