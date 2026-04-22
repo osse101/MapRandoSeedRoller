@@ -12,6 +12,18 @@ import (
 	"maprandoseedroller/preset"
 )
 
+type Roller interface {
+	ExecuteRoll(req models.RequestIn) (models.ResponseOut, error)
+}
+
+type defaultRoller struct{}
+
+func (d defaultRoller) ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
+	return workflow.ExecuteRoll(req)
+}
+
+var roller Roller = defaultRoller{}
+
 func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a preset name.")
@@ -25,7 +37,7 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("Received request: %+v\n", req)
 
-	result, err := workflow.ExecuteRoll(*req)
+	result, err := roller.ExecuteRoll(*req)
 	if err != nil {
 		log.Printf("Randomization failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)

@@ -11,20 +11,7 @@ import (
 )
 
 func ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
-	//Parse flags
-	flagTable := mergeAndSortAliases()
-
-	tokens, err := parser.Lex(req.Flags, flagTable)
-	if err != nil {
-		return models.ResponseOut{}, err
-	}
-
-	//Write json preset
-	tmpl, err := preset.LoadTemplate(req.Preset)
-	if err != nil {
-		return models.ResponseOut{}, err
-	}
-	gameData, err := parser.Hydrate(tmpl, tokens)
+	gameData, err := PrepareGameData(req)
 	if err != nil {
 		return models.ResponseOut{}, err
 	}
@@ -41,6 +28,24 @@ func ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
 	}
 
 	return resp, nil
+}
+
+// PrepareGameData handles lexing flags, loading templates, and hydrating game data.
+func PrepareGameData(req models.RequestIn) ([]byte, error) {
+	//Parse flags
+	flagTable := mergeAndSortAliases()
+
+	tokens, err := parser.Lex(req.Flags, flagTable)
+	if err != nil {
+		return nil, err
+	}
+
+	//Write json preset
+	tmpl, err := preset.LoadTemplate(req.Preset)
+	if err != nil {
+		return nil, err
+	}
+	return parser.Hydrate(tmpl, tokens)
 }
 
 func mergeAndSortAliases(tables ...map[string]string) []models.AliasEntry {
