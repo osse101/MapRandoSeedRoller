@@ -5,22 +5,13 @@ import (
 	"fmt"
 	"strings"
 
-	"maprandoseedroller/lib"
+	"maprandoseedroller/lib/models"
+	"maprandoseedroller/lib/workflow"
 	"maprandoseedroller/preset"
 	"net/http"
 )
 
-type Request struct {
-	Preset string `json:"preset"`
-	Race   bool   `json:"race"`
-	Dev    bool   `json:"dev"`
-}
-
-type Response struct {
-	SeedURL string `json:"seed_url"`
-}
-
-func Handler(w http.ResponseWriter, r *http.Request) {
+func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a preset name.")
 		return
@@ -33,40 +24,23 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("Received request: %+v\n", req)
 
-	p, err := route(req.Preset)
-	if err != nil {
-		fmt.Printf("Routing failed for preset %s: %v\n", req.Preset, err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	fmt.Printf("Selected preset: %T\n", p)
-
-	settings, err := buildSettings(p, req.Race)
-	if err != nil {
-		http.Error(w, "failed to build settings", http.StatusInternalServerError)
-		return
-	}
-	baseURL := lib.BuildSite(req.Dev)
-	spoilerToken := lib.BuildSpoilerToken()
-	fmt.Printf("Using site: %s\n", baseURL)
-
-	seedURL, err := lib.Randomize(baseURL, settings, spoilerToken)
+	result, err := workflow.ExecuteRoll(*req)
 	if err != nil {
 		fmt.Printf("Randomization failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Printf("Randomization successful: %s\n", seedURL)
+	fmt.Printf("Randomization successful: %s\n", result)
 
-	err = writeResponse(seedURL, w)
+	err = writeResponse(result.SeedURL, w)
 	if err != nil {
 		http.Error(w, "failed to write response", http.StatusInternalServerError)
 		return
 	}
 }
 
-func decode(r *http.Request) (*Request, error) {
-	var req Request
+func decode(r *http.Request) (*models.RequestIn, error) {
+	var req models.RequestIn
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return nil, err
 	}
@@ -74,47 +48,23 @@ func decode(r *http.Request) (*Request, error) {
 	return &req, nil
 }
 
-var presets = map[string]preset.Preset{
-	"s4": &preset.Season4{},
-	"season4": &preset.Season4{},
-	"community race season 4": &preset.Season4{},
-	"mentor": &preset.Mentor{},
-	"mentor tournament": &preset.Mentor{},
-	"default": &preset.Default{},
-}
-
-func route(name string) (preset.Preset, error) {
-	p, ok := presets[strings.ToLower(name)]
-	if !ok {
-		return nil, fmt.Errorf("unknown preset: %s", name)
-	}
-	return p, nil
-}
-
-func buildSettings(p preset.Preset, race bool) ([]byte, error) {
-	settings, err := p.Settings()
-	if err != nil {
-		return nil, err
-	}
-	if race {
-		var s map[string]interface{}
-		if err := json.Unmarshal(settings, &s); err != nil {
-			return nil, err
-		}
-		s["race_mode"] = true
-		settings, err = json.Marshal(s)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return settings, nil
-}
 
 func writeResponse(seedURL string, w http.ResponseWriter) error {
-	res := Response{
+	res := models.ResponseOut{
 		SeedURL: seedURL,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
 	return nil
+}
+
+func GetHelpText(input string)(string){
+	switch(input){
+	case "preset", "presets":
+		presets := preset.GetPresetNames()
+		return "Available presets: " + strings.Join(presets, ", ")
+	case "flag", "flags":
+		return "These are your flags:"
+	}
+	return "Usage: !roll <preset> <flags>.  For more help use !help presets or !help flags"
 }

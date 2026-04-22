@@ -1,6 +1,6 @@
 {
     "version": 120,
-    "name": "mysettings",
+    "name": "Winter Tournament - Item Draft",
     "skill_assumption_settings": {
         "preset": "Hard",
         "shinespark_tiles": 20,
@@ -11,13 +11,13 @@
         "farm_time_limit": 90,
         "gate_glitch_leniency": 14,
         "door_stuck_leniency": 2,
-        "spike_suit_leniency": 15,
+        "bomb_into_cf_leniency": 5,
+        "jump_into_cf_leniency": 9,
         "flash_suit_distance": 5,
+        "spike_suit_leniency": 15,
         "spike_xmode_leniency": 2,
         "spike_speed_keep_leniency": 4,
         "elevator_cf_leniency": 8,
-        "bomb_into_cf_leniency": 5,
-        "jump_into_cf_leniency": 9,
         "phantoon_proficiency": 0.5,
         "draygon_proficiency": 0.5,
         "ridley_proficiency": 0.3,
@@ -4125,19 +4125,19 @@
         ]
     },
     "item_progression_settings": {
-        "preset": "Challenge",
-        "progression_rate": "Slow",
-        "item_placement_style": "Local",
+        "preset": null,
+        "progression_rate": "Uniform",
+        "item_placement_style": "Forced",
         "item_priority_strength": "Moderate",
         "random_tank": true,
         "spazer_before_plasma": true,
-        "item_pool_preset": "Full",
+        "item_pool_preset": null,
         "stop_item_placement_early": false,
-        "ammo_collect_fraction": 1,
+        "ammo_collect_fraction": 0.7,
         "item_pool": [
             {
                 "item": "Missile",
-                "count": 46
+                "count": 42
             },
             {
                 "item": "ETank",
@@ -4149,79 +4149,11 @@
             },
             {
                 "item": "Super",
-                "count": 10
+                "count": 14
             },
             {
                 "item": "PowerBomb",
                 "count": 10
-            },
-            {
-                "item": "Charge",
-                "count": 1
-            },
-            {
-                "item": "Ice",
-                "count": 1
-            },
-            {
-                "item": "Wave",
-                "count": 1
-            },
-            {
-                "item": "Spazer",
-                "count": 1
-            },
-            {
-                "item": "Plasma",
-                "count": 1
-            },
-            {
-                "item": "XRayScope",
-                "count": 1
-            },
-            {
-                "item": "Morph",
-                "count": 1
-            },
-            {
-                "item": "Bombs",
-                "count": 1
-            },
-            {
-                "item": "Grapple",
-                "count": 1
-            },
-            {
-                "item": "HiJump",
-                "count": 1
-            },
-            {
-                "item": "SpeedBooster",
-                "count": 1
-            },
-            {
-                "item": "SpringBall",
-                "count": 1
-            },
-            {
-                "item": "WallJump",
-                "count": 1
-            },
-            {
-                "item": "SpaceJump",
-                "count": 1
-            },
-            {
-                "item": "ScrewAttack",
-                "count": 1
-            },
-            {
-                "item": "Varia",
-                "count": 1
-            },
-            {
-                "item": "Gravity",
-                "count": 1
             }
         ],
         "starting_items_preset": "None",
@@ -4295,10 +4227,6 @@
                 "count": 0
             },
             {
-                "item": "WallJump",
-                "count": 0
-            },
-            {
                 "item": "SpaceJump",
                 "count": 0
             },
@@ -4358,7 +4286,7 @@
             },
             {
                 "item": "Morph",
-                "priority": "Default"
+                "priority": "Early"
             },
             {
                 "item": "Bombs",
@@ -4404,19 +4332,19 @@
         "filler_items": [
             {
                 "item": "ETank",
-                "priority": "No"
+                "priority": "Early"
             },
             {
                 "item": "ReserveTank",
-                "priority": "No"
+                "priority": "Yes"
             },
             {
                 "item": "Super",
-                "priority": "Semi"
+                "priority": "Yes"
             },
             {
                 "item": "PowerBomb",
-                "priority": "Semi"
+                "priority": "Yes"
             },
             {
                 "item": "Charge",
@@ -4424,11 +4352,11 @@
             },
             {
                 "item": "Ice",
-                "priority": "No"
+                "priority": "Yes"
             },
             {
                 "item": "Wave",
-                "priority": "No"
+                "priority": "Yes"
             },
             {
                 "item": "Spazer",
@@ -4436,11 +4364,11 @@
             },
             {
                 "item": "Plasma",
-                "priority": "No"
+                "priority": "Yes"
             },
             {
                 "item": "XRayScope",
-                "priority": "No"
+                "priority": "Yes"
             },
             {
                 "item": "Morph",
@@ -4489,11 +4417,11 @@
         ]
     },
     "quality_of_life_settings": {
-        "preset": "High",
+        "preset": null,
         "initial_map_reveal_settings": {
-            "preset": "Maps",
+            "preset": null,
             "map_stations": "Full",
-            "save_stations": "No",
+            "save_stations": "Full",
             "refill_stations": "No",
             "ship": "No",
             "objectives": "No",
@@ -4516,10 +4444,10 @@
         "fast_elevators": true,
         "fast_doors": true,
         "fast_pause_menu": true,
+        "fanfares": "Off",
         "respin": false,
         "infinite_space_jump": false,
         "momentum_conservation": false,
-        "fanfares": "Off",
         "all_items_spawn": true,
         "acid_chozo": true,
         "remove_climb_lava": true,
@@ -4529,7 +4457,7 @@
         "reserve_backward_transfer": false,
         "buffed_drops": true,
         "early_save": true,
-        "persist_flash_suit": true,
+        "persist_flash_suit": false,
         "persist_blue_suit": false
     },
     "objective_settings": {
@@ -4616,10 +4544,10 @@
         "max_objectives": 4,
         "objective_screen": "Enabled"
     },
-    "map_layout": "Vanilla",
-    "doors_mode": "Blue",
+    "map_layout": "Standard",
+    "doors_mode": "Ammo",
     "start_location_settings": {
-        "mode": "Ship",
+        "mode": "Random",
         "room_id": null,
         "node_id": null
     },
@@ -4628,11 +4556,11 @@
         "wall_jump": "Vanilla",
         "area_assignment": "Ordered",
         "door_locks_size": "Large",
-        "maps_revealed": null,
         "map_station_reveal": "Full",
         "energy_free_shinesparks": false,
         "ultra_low_qol": false,
         "race_mode": true,
         "random_seed": null
-    }
+    },
+    "debug": false
 }

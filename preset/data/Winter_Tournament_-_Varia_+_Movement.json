@@ -1,6 +1,6 @@
 {
-    "version": 121,
-    "name": "S4Ordered",
+    "version": 120,
+    "name": "Winter Tournament - Varia + Movement",
     "skill_assumption_settings": {
         "preset": "Hard",
         "shinespark_tiles": 20,
@@ -14,18 +14,16 @@
         "bomb_into_cf_leniency": 5,
         "jump_into_cf_leniency": 9,
         "flash_suit_distance": 5,
-        "blue_suit_distance": 7,
         "spike_suit_leniency": 15,
         "spike_xmode_leniency": 2,
         "spike_speed_keep_leniency": 4,
         "elevator_cf_leniency": 8,
-        "crystal_spark_leniency": 14,
         "phantoon_proficiency": 0.5,
         "draygon_proficiency": 0.5,
         "ridley_proficiency": 0.3,
         "botwoon_proficiency": 0.5,
         "mother_brain_proficiency": 0.5,
-        "escape_timer_multiplier": 1.6,
+        "escape_timer_multiplier": 1.4,
         "tech_settings": [
             {
                 "id": 6,
@@ -283,16 +281,6 @@
                 "enabled": true
             },
             {
-                "id": 10001,
-                "name": "canHyperGateShot",
-                "enabled": true
-            },
-            {
-                "id": 244,
-                "name": "canHorizontalMidairShinespark",
-                "enabled": true
-            },
-            {
                 "id": 134,
                 "name": "canMidairShinespark",
                 "enabled": true
@@ -330,6 +318,11 @@
             {
                 "id": 182,
                 "name": "canCameraManip",
+                "enabled": true
+            },
+            {
+                "id": 10001,
+                "name": "canHyperGateShot",
                 "enabled": true
             },
             {
@@ -733,21 +726,6 @@
                 "enabled": false
             },
             {
-                "id": 215,
-                "name": "canCarryBlueSuit",
-                "enabled": false
-            },
-            {
-                "id": 216,
-                "name": "canRModeSparkInterrupt",
-                "enabled": false
-            },
-            {
-                "id": 217,
-                "name": "canCrystalSpark",
-                "enabled": false
-            },
-            {
                 "id": 154,
                 "name": "canXRayCancelShinecharge",
                 "enabled": false
@@ -873,38 +851,13 @@
                 "enabled": false
             },
             {
-                "id": 242,
-                "name": "canBlueSuitSpikeJump",
-                "enabled": false
-            },
-            {
-                "id": 227,
-                "name": "canUnderwaterCrystalSpark",
-                "enabled": false
-            },
-            {
-                "id": 223,
-                "name": "canXModeBlueSuit",
-                "enabled": false
-            },
-            {
                 "id": 143,
                 "name": "canSpeedKeep",
                 "enabled": false
             },
             {
-                "id": 230,
-                "name": "canReserveTriggerBufferXRay",
-                "enabled": false
-            },
-            {
                 "id": 158,
                 "name": "canRightSideDoorStuckFromWater",
-                "enabled": false
-            },
-            {
-                "id": 243,
-                "name": "canXModeMovement",
                 "enabled": false
             },
             {
@@ -945,11 +898,6 @@
             {
                 "id": 166,
                 "name": "canUpwardGModeSetup",
-                "enabled": false
-            },
-            {
-                "id": 218,
-                "name": "canBlueSuitGModeSetup",
                 "enabled": false
             },
             {
@@ -1018,16 +966,6 @@
                 "enabled": false
             },
             {
-                "id": 222,
-                "name": "canRModePauseAbuseSparkInterrupt",
-                "enabled": false
-            },
-            {
-                "id": 224,
-                "name": "canDoubleXModeBlueSuit",
-                "enabled": false
-            },
-            {
                 "id": 149,
                 "name": "canPauseRemorphTemporaryBlue",
                 "enabled": false
@@ -1093,18 +1031,8 @@
                 "enabled": false
             },
             {
-                "id": 160,
-                "name": "canSuperJump",
-                "enabled": false
-            },
-            {
                 "id": 148,
                 "name": "canLongChainTemporaryBlue",
-                "enabled": false
-            },
-            {
-                "id": 225,
-                "name": "canSlopeXMode",
                 "enabled": false
             },
             {
@@ -1165,11 +1093,6 @@
             {
                 "id": 213,
                 "name": "canRModeKnockbackSpark",
-                "enabled": false
-            },
-            {
-                "id": 220,
-                "name": "canRightSideDashlessDoorStuck",
                 "enabled": false
             },
             {
@@ -1515,7 +1438,7 @@
                 "room_id": 61,
                 "notable_id": 5,
                 "room_name": "Pink Brinstar Wave Gate Room",
-                "notable_name": "Kago to Ride the Elevator",
+                "notable_name": "Screw and Kago to Ride the Elevator",
                 "enabled": false
             },
             {
@@ -1788,7 +1711,7 @@
                 "room_id": 184,
                 "notable_id": 2,
                 "room_name": "Botwoon Hallway",
-                "notable_name": "Right-to-Left Shinespark",
+                "notable_name": "Reverse Shinespark",
                 "enabled": false
             },
             {
@@ -1844,7 +1767,7 @@
                 "room_id": 187,
                 "notable_id": 1,
                 "room_name": "Halfie Climb Room",
-                "notable_name": "Come in Shinecharged, Shinespark from the Bottom Right",
+                "notable_name": "Enter with Shinespark from the Bottom Right",
                 "enabled": false
             },
             {
@@ -2010,6 +1933,13 @@
             },
             {
                 "room_id": 59,
+                "notable_id": 1,
+                "room_name": "Big Pink",
+                "notable_name": "Break Raised Bomb Blocks with Blue Speed",
+                "enabled": false
+            },
+            {
+                "room_id": 59,
                 "notable_id": 3,
                 "room_name": "Big Pink",
                 "notable_name": "Super Block Speedball",
@@ -2143,6 +2073,13 @@
             },
             {
                 "room_id": 127,
+                "notable_id": 1,
+                "room_name": "Indiana Jones Room",
+                "notable_name": "Indiana Jones Grapple",
+                "enabled": false
+            },
+            {
+                "room_id": 127,
                 "notable_id": 3,
                 "room_name": "Indiana Jones Room",
                 "notable_name": "Full Room Space Jump Through Speed Blocks",
@@ -2167,13 +2104,6 @@
                 "notable_id": 8,
                 "room_name": "Indiana Jones Room",
                 "notable_name": "Mella Ice Clip",
-                "enabled": false
-            },
-            {
-                "room_id": 127,
-                "notable_id": 10,
-                "room_name": "Indiana Jones Room",
-                "notable_name": "Indiana Jones Grapple (With Retries)",
                 "enabled": false
             },
             {
@@ -2493,13 +2423,6 @@
             },
             {
                 "room_id": 59,
-                "notable_id": 1,
-                "room_name": "Big Pink",
-                "notable_name": "Break Raised Bomb Blocks with Blue Speed",
-                "enabled": false
-            },
-            {
-                "room_id": 59,
                 "notable_id": 9,
                 "room_name": "Big Pink",
                 "notable_name": "Zeb Ice Clip",
@@ -2542,13 +2465,6 @@
             },
             {
                 "room_id": 127,
-                "notable_id": 1,
-                "room_name": "Indiana Jones Room",
-                "notable_name": "Indiana Jones Grapple (First Try)",
-                "enabled": false
-            },
-            {
-                "room_id": 127,
                 "notable_id": 9,
                 "room_name": "Indiana Jones Room",
                 "notable_name": "Spring Ball Unmorph Bomb Boost",
@@ -2579,7 +2495,7 @@
                 "room_id": 201,
                 "notable_id": 3,
                 "room_name": "Crab Hole",
-                "notable_name": "Suitless Crab Climb Superless with Spring Ball",
+                "notable_name": "Suitless Crab Climb Superless with Springball",
                 "enabled": false
             },
             {
@@ -2846,13 +2762,6 @@
                 "notable_id": 1,
                 "room_name": "Green Hill Zone",
                 "notable_name": "Tunnel Crawl",
-                "enabled": false
-            },
-            {
-                "room_id": 55,
-                "notable_id": 1,
-                "room_name": "Noob Bridge",
-                "notable_name": "Dashless Quick Drops",
                 "enabled": false
             },
             {
@@ -3136,24 +3045,10 @@
                 "enabled": false
             },
             {
-                "room_id": 189,
-                "notable_id": 12,
-                "room_name": "Colosseum",
-                "notable_name": "Blue Suit Sand Traversal",
-                "enabled": false
-            },
-            {
                 "room_id": 175,
                 "notable_id": 3,
                 "room_name": "Crab Shaft",
                 "notable_name": "Crab Ice Clip Door Lock Skip",
-                "enabled": false
-            },
-            {
-                "room_id": 193,
-                "notable_id": 7,
-                "room_name": "Draygon's Room",
-                "notable_name": "Suitless Morphless Fight",
                 "enabled": false
             },
             {
@@ -3167,7 +3062,7 @@
                 "room_id": 208,
                 "notable_id": 2,
                 "room_name": "East Sand Pit",
-                "notable_name": "Underwater Wall Jump",
+                "notable_name": "Underwater Walljump",
                 "enabled": false
             },
             {
@@ -3276,6 +3171,13 @@
                 "enabled": false
             },
             {
+                "room_id": 45,
+                "notable_id": 3,
+                "room_name": "Early Supers Room",
+                "notable_name": "Crouch Gate Clip Damage Boost",
+                "enabled": false
+            },
+            {
                 "room_id": 51,
                 "notable_id": 2,
                 "room_name": "Etecoon Energy Tank Room",
@@ -3381,6 +3283,13 @@
                 "enabled": false
             },
             {
+                "room_id": 151,
+                "notable_id": 5,
+                "room_name": "Screw Attack Room",
+                "notable_name": "Grapple Teleport Inside Wall",
+                "enabled": false
+            },
+            {
                 "room_id": 136,
                 "notable_id": 2,
                 "room_name": "Amphitheatre",
@@ -3468,7 +3377,7 @@
                 "room_id": 189,
                 "notable_id": 7,
                 "room_name": "Colosseum",
-                "notable_name": "Spike Platforming with Spring Ball (Left to Right)",
+                "notable_name": "Spike Platforming with SpringBall (Left to Right)",
                 "enabled": false
             },
             {
@@ -3983,13 +3892,6 @@
                 "enabled": false
             },
             {
-                "room_id": 45,
-                "notable_id": 3,
-                "room_name": "Early Supers Room",
-                "notable_name": "Crouch Gate Clip Damage Boost",
-                "enabled": false
-            },
-            {
                 "room_id": 54,
                 "notable_id": 6,
                 "room_name": "Green Hill Zone",
@@ -4252,9 +4154,77 @@
             {
                 "item": "PowerBomb",
                 "count": 10
+            },
+            {
+                "item": "Charge",
+                "count": 1
+            },
+            {
+                "item": "Ice",
+                "count": 1
+            },
+            {
+                "item": "Wave",
+                "count": 1
+            },
+            {
+                "item": "Spazer",
+                "count": 1
+            },
+            {
+                "item": "Plasma",
+                "count": 1
+            },
+            {
+                "item": "XRayScope",
+                "count": 1
+            },
+            {
+                "item": "Morph",
+                "count": 1
+            },
+            {
+                "item": "Bombs",
+                "count": 1
+            },
+            {
+                "item": "Grapple",
+                "count": 1
+            },
+            {
+                "item": "HiJump",
+                "count": 1
+            },
+            {
+                "item": "SpeedBooster",
+                "count": 1
+            },
+            {
+                "item": "SpringBall",
+                "count": 1
+            },
+            {
+                "item": "WallJump",
+                "count": 1
+            },
+            {
+                "item": "SpaceJump",
+                "count": 1
+            },
+            {
+                "item": "ScrewAttack",
+                "count": 1
+            },
+            {
+                "item": "Varia",
+                "count": 1
+            },
+            {
+                "item": "Gravity",
+                "count": 1
             }
         ],
-        "starting_items_preset": "None",
+        "starting_items_preset": null,
         "starting_items": [
             {
                 "item": "Missile",
@@ -4282,7 +4252,7 @@
             },
             {
                 "item": "Ice",
-                "count": 0
+                "count": 1
             },
             {
                 "item": "Wave",
@@ -4310,11 +4280,11 @@
             },
             {
                 "item": "Grapple",
-                "count": 0
+                "count": 1
             },
             {
                 "item": "HiJump",
-                "count": 0
+                "count": 1
             },
             {
                 "item": "SpeedBooster",
@@ -4322,6 +4292,10 @@
             },
             {
                 "item": "SpringBall",
+                "count": 1
+            },
+            {
+                "item": "WallJump",
                 "count": 0
             },
             {
@@ -4334,7 +4308,7 @@
             },
             {
                 "item": "Varia",
-                "count": 0
+                "count": 1
             },
             {
                 "item": "Gravity",
@@ -4542,25 +4516,18 @@
         "fast_elevators": true,
         "fast_doors": true,
         "fast_pause_menu": true,
-        "fanfares": "Off",
         "respin": false,
         "infinite_space_jump": false,
         "momentum_conservation": false,
+        "fanfares": "Off",
         "all_items_spawn": true,
         "acid_chozo": true,
         "remove_climb_lava": true,
-        "crash_fixes": {
-            "preset": "Death",
-            "spring_ball": "Death",
-            "yapping_maw": "Death",
-            "auto_reserve": "Death",
-            "x_mode": "Death"
-        },
         "etank_refill": "Full",
         "energy_station_reserves": true,
-        "disableable_etanks": "Standard",
+        "disableable_etanks": true,
         "reserve_backward_transfer": false,
-        "enemy_drops": "Buffed",
+        "buffed_drops": true,
         "early_save": true,
         "persist_flash_suit": false,
         "persist_blue_suit": false
@@ -4650,17 +4617,7 @@
         "objective_screen": "Enabled"
     },
     "map_layout": "Standard",
-    "doors_settings": {
-        "preset": "Ammo",
-        "red_doors_count": 30,
-        "green_doors_count": 15,
-        "yellow_doors_count": 10,
-        "charge_doors_count": 0,
-        "ice_doors_count": 0,
-        "wave_doors_count": 0,
-        "spazer_doors_count": 0,
-        "plasma_doors_count": 0
-    },
+    "doors_mode": "Ammo",
     "start_location_settings": {
         "mode": "Random",
         "room_id": null,
@@ -4669,23 +4626,13 @@
     "save_animals": "No",
     "other_settings": {
         "wall_jump": "Vanilla",
-        "area_assignment": {
-            "preset": "Size",
-            "base_order": "Size",
-            "ship_in_crateria": false,
-            "mother_brain_in_tourian": false
-        },
+        "area_assignment": "Ordered",
         "door_locks_size": "Large",
+        "maps_revealed": null,
         "map_station_reveal": "Full",
         "energy_free_shinesparks": false,
-        "all_enemies_respawn": false,
         "ultra_low_qol": false,
-        "disable_spikesuit": false,
-        "disable_bluesuit": false,
-        "enable_major_glitches": false,
-        "speed_booster": "Vanilla",
         "race_mode": true,
         "random_seed": null
-    },
-    "debug": false
+    }
 }
