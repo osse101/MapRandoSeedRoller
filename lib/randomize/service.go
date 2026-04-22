@@ -4,15 +4,15 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
-func Randomize(data []byte)(string, error){
+func Randomize(data []byte) (string, error) {
 	//Make request to Map Rando
 	r := models.RequestMapRando{
-		Settings: data,
+		Settings:     data,
 		SpoilerToken: "s",
 	}
 
-	resp, err := RandomizeRequest("maprando.com/", r)
-	if err != nil{
+	resp, err := MakeRequest("maprando.com/", r)
+	if err != nil {
 		return "", err
 	}
 

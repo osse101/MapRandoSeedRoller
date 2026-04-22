@@ -3,10 +3,12 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"maprandoseedroller/lib"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"maprandoseedroller/lib"
 )
 
 type UnlockURL struct {
@@ -14,7 +16,7 @@ type UnlockURL struct {
 }
 
 type UnlockRequest struct {
-	BaseURL string 
+	BaseURL    string
 	SeedString string
 }
 
@@ -33,11 +35,11 @@ func UnlockHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("invalid request: %v", err), http.StatusBadRequest)
 		return
 	}
-	fmt.Printf("Received unlock request: %+v\n", req)	
+	log.Printf("Received unlock request: %+v\n", req)
 
 	msg, err := sendUnlockRequest(*req)
 	if err != nil {
-		fmt.Printf("Unlock failed: %v\n", err)
+		log.Printf("Unlock failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("unlock failed: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -62,7 +64,7 @@ func decodeAndParseSeedURL(r *http.Request) (*UnlockRequest, error) {
 
 	var req UnlockRequest
 	req.BaseURL = strings.TrimSuffix(unlockURL.SeedURL, "/")
-	
+
 	// Extract seed ID from the end of the URL
 	parts := strings.Split(req.BaseURL, "/")
 	req.SeedString = parts[len(parts)-1]
@@ -98,12 +100,10 @@ func sendUnlockRequest(req UnlockRequest) (string, error) {
 	return "Seed unlocked.", nil
 }
 
-
 func writeUnlockResponse(UnlockMessage string, w http.ResponseWriter) error {
 	res := UnlockResponse{
 		UnlockMessage: UnlockMessage,
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(res)
-	return nil
+	return json.NewEncoder(w).Encode(res)
 }

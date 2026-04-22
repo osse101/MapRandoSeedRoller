@@ -3,12 +3,13 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 	"strings"
 
 	"maprandoseedroller/lib/models"
 	"maprandoseedroller/lib/workflow"
 	"maprandoseedroller/preset"
-	"net/http"
 )
 
 func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,15 +23,15 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
-	fmt.Printf("Received request: %+v\n", req)
+	log.Printf("Received request: %+v\n", req)
 
 	result, err := workflow.ExecuteRoll(*req)
 	if err != nil {
-		fmt.Printf("Randomization failed: %v\n", err)
+		log.Printf("Randomization failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Printf("Randomization successful: %s\n", result)
+	log.Printf("Randomization successful: %s\n", result)
 
 	err = writeResponse(result.SeedURL, w)
 	if err != nil {
@@ -48,18 +49,16 @@ func decode(r *http.Request) (*models.RequestIn, error) {
 	return &req, nil
 }
 
-
 func writeResponse(seedURL string, w http.ResponseWriter) error {
 	res := models.ResponseOut{
 		SeedURL: seedURL,
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(res)
-	return nil
+	return json.NewEncoder(w).Encode(res)
 }
 
-func GetHelpText(input string)(string){
-	switch(input){
+func GetHelpText(input string) string {
+	switch input {
 	case "preset", "presets":
 		presets := preset.GetPresetNames()
 		return "Available presets: " + strings.Join(presets, ", ")

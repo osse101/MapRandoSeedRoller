@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
@@ -13,10 +14,13 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
-func RandomizeRequest(baseURL string, settings models.RequestMapRando) (string, error) {
+func MakeRequest(baseURL string, settings models.RequestMapRando) (string, error) {
 	body, contentType, err := buildMultipartRequest(settings)
+	if err != nil {
+		return "", err
+	}
 
-	fmt.Printf("Sending request to: %s/randomize\n", baseURL)
+	log.Printf("Sending request to: %s/randomize\n", baseURL)
 	req, err := http.NewRequest("POST", baseURL+"/randomize", body)
 	if err != nil {
 		return "", err
@@ -26,10 +30,10 @@ func RandomizeRequest(baseURL string, settings models.RequestMapRando) (string, 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("HTTP request failed: %v\n", err)
+		log.Printf("HTTP request failed: %v\n", err)
 		return "", err
 	}
-	fmt.Printf("Response status: %s\n", resp.Status)
+	log.Printf("Response status: %s\n", resp.Status)
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
@@ -38,7 +42,7 @@ func RandomizeRequest(baseURL string, settings models.RequestMapRando) (string, 
 
 	var result models.ResponseMapRando
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", fmt.Errorf("failed to decode response JSON: %v", err)
+		return "", fmt.Errorf("failed to decode response JSON: %w", err)
 	}
 
 	seedURL := result.SeedURL
@@ -49,22 +53,21 @@ func RandomizeRequest(baseURL string, settings models.RequestMapRando) (string, 
 	return seedURL, nil
 }
 
-
-func buildMultipartRequest(data interface{}) (*bytes.Buffer, string, error){
+func buildMultipartRequest(data interface{}) (*bytes.Buffer, string, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
 	val := reflect.ValueOf(data)
 	typ := val.Type()
 
-	for i:= 0; i<val.NumField(); i++{
-		field:= val.Field(i)
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
 		structField := typ.Field(i)
 
 		fieldName := structField.Tag.Get("form")
 		fileName := structField.Tag.Get("filename")
 
-		if fileName != ""{
+		if fileName != "" {
 			// It's a file part
 			h := make(textproto.MIMEHeader)
 			h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, fieldName, fileName))
@@ -74,10 +77,14 @@ func buildMultipartRequest(data interface{}) (*bytes.Buffer, string, error){
 			if err != nil {
 				return nil, "", fmt.Errorf("failed to create part: %w", err)
 			}
-			part.Write(field.Bytes())
-		}else{
+			if _, err := part.Write(field.Bytes()); err != nil {
+				return nil, "", fmt.Errorf("failed to write part: %w", err)
+			}
+		} else {
 			// It's a regular field
-			writer.WriteField(fieldName, fmt.Sprint(field.Interface()))
+			if err := writer.WriteField(fieldName, fmt.Sprint(field.Interface())); err != nil {
+				return nil, "", fmt.Errorf("failed to write field: %w", err)
+			}
 		}
 	}
 

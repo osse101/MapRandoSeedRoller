@@ -1,0 +1,5 @@
+.golangci.yml
+Makefile
+**/*_test.go
+README.md
+tools/*

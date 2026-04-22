@@ -84,13 +84,13 @@ func postprocess(m map[string]interface{}, f models.PresetFields) {
 }
 
 func SetNestedValue(m map[string]interface{}, path string, value interface{}) {
-    parts := strings.Split(path, ".")
-    for i := 0; i < len(parts)-1; i++ {
-        key := parts[i]
-        if _, ok := m[key]; !ok {
-            m[key] = make(map[string]interface{})
-        }
-        m = m[key].(map[string]interface{})
-    }
-    m[parts[len(parts)-1]] = value
+	parts := strings.Split(path, ".")
+	for i := 0; i < len(parts)-1; i++ {
+		key := parts[i]
+		if _, ok := m[key]; !ok {
+			m[key] = make(map[string]interface{})
+		}
+		m = m[key].(map[string]interface{})
+	}
+	m[parts[len(parts)-1]] = value
 }

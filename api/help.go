@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-func HelpHandler(w http.ResponseWriter, r *http.Request) {
+func HelpHandler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a preset name.")
-	return
 }
