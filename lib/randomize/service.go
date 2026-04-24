@@ -1,17 +1,18 @@
 package randomize
 
 import (
+	"maprandoseedroller/lib"
 	"maprandoseedroller/lib/models"
 )
 
-func Randomize(data []byte) (string, error) {
+func Randomize(data []byte, isDev bool) (string, error) {
 	//Make request to Map Rando
 	r := models.RequestMapRando{
 		Settings:     data,
-		SpoilerToken: "s",
+		SpoilerToken: lib.BuildSpoilerToken(),
 	}
 
-	resp, err := MakeRequest("maprando.com/", r)
+	resp, err := MakeRequest(lib.BuildSite((isDev)), r)
 	if err != nil {
 		return "", err
 	}

@@ -33,6 +33,12 @@ linters:
     # Performance & Best Practices
     - prealloc # Slice preallocation opportunities
     - errorlint # Error wrapping (Go 1.13+)
+linters-settings:
+  gci:
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default # Default section: contains all sections that could not be matched by another section type.
+      - prefix(maprandoseedroller) # Custom section: groups all local imports.
 issues:
   exclude-files:
     - "lib/parser/mapping.go"

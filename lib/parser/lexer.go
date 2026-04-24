@@ -8,7 +8,8 @@ import (
 )
 
 func Lex(input string, aliases []models.AliasEntry) ([]models.Token, error) {
-	var tokens []models.Token
+	tokens := []models.Token{}
+	lastFlag := rune(-1)
 
 	for len(input) > 0 {
 		matchFound := false
@@ -17,35 +18,45 @@ func Lex(input string, aliases []models.AliasEntry) ([]models.Token, error) {
 			// Case-insensitive prefix check
 			if len(input) >= len(entry.ShortName) &&
 				strings.EqualFold(input[:len(entry.ShortName)], entry.ShortName) {
-				// 1. Extract the specific chunk (e.g., "Dray")
+				// Extract the specific chunk (e.g., "Dray")
 				chunk := input[:len(entry.ShortName)]
 
-				// 2. Determine TriState based on the chunk's casing
-				state := determineTriState(chunk)
+				// Check if flag or alias
+				if len(chunk) == 1 {
+					lastFlag = unicode.ToLower(rune(chunk[0]))
+				}
 
-				// 3. Create token
+				// Determine TriState based on the chunk's casing
+				state := DetermineTriState(chunk)
+
+				// Create token
 				tokens = append(tokens, models.Token{
+					Flag:  lastFlag,
 					ID:    entry.LongName,
 					Value: state,
 				})
 
-				// 4. Advance input pointer
+				// Advance input pointer
 				input = input[len(entry.ShortName):]
 				matchFound = true
 				break
 			}
 		}
 
-		// If no alias matches the current start of the string, skip 1 char
+		// If no alias matches the current start of the string
 		if !matchFound {
-			// You could log a warning here for the "Warning Level" feedback
 			input = input[1:]
+			continue
 		}
 	}
 	return tokens, nil
 }
 
-func determineTriState(s string) models.TriState {
+func DetermineTriState(s string) models.TriState {
+	if len(s) == 0 {
+		return models.Maybe
+	}
+
 	isAllUpper := true
 	isAllLower := true
 

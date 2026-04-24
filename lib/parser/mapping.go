@@ -4,31 +4,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"maprandoseedroller/lib/models"
+	"maprandoseedroller/preset"
 	"reflect"
 	"strings"
 )
 
 // Hydrate converts tokens into preset overrides and applies them onto the template.
 // Returns the merged preset as JSON bytes ready for the MapRando API.
-func Hydrate(template map[string]interface{}, tokens []models.Token) ([]byte, error) {
+func Hydrate(template map[string]interface{}, tokens []models.Token) ([]byte, bool, error) {
 	// --- Step 1: tokens → PresetFields ---
 	fields, err := tokensToPresetFields(tokens)
 	if err != nil {
-		return nil, fmt.Errorf("tokensToPresetFields: %w", err)
+		return nil, false, fmt.Errorf("tokensToPresetFields: %w", err)
 	}
 
 	// --- Step 2: apply PresetFields onto template ---
 	// Not 1:1: some fields drive multiple JSON paths, others require
 	// lookup tables, and complex fields (slices, enums) need custom logic.
 	if err := applyPresetFields(template, fields); err != nil {
-		return nil, fmt.Errorf("applyPresetFields: %w", err)
+		return nil, false, fmt.Errorf("applyPresetFields: %w", err)
 	}
 
 	// --- Step 3: postprocess ---
 	// e.g. clamp objectives, resolve preset name collisions, etc.
 	postprocess(template, fields)
+	isDev := fields.Version == preset.DevVersion
+	data, err := json.Marshal(template)
 
-	return json.Marshal(template)
+	return data, isDev, err
 }
 
 // tokensToPresetFields maps a flat token list onto the PresetFields struct.
