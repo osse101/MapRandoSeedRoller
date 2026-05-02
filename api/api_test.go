@@ -16,6 +16,13 @@ func (m mockRoller) ExecuteRoll(_ models.RequestIn) (models.ResponseOut, error) 
 	return models.ResponseOut{SeedURL: "http://mock-seed-url.com/123"}, nil
 }
 
+var mockResult = models.ResponseOut2{
+	SeedURL:  "https://maprando.com/seed/tc2pHBSZc/",
+	SeedHash: "YARD YARD YARD YARD",
+	Info:     "s5 preset | https://maprando.com/seed/tc2pHBSZc/ | YARD YARD YARD YARD",
+	Message:  "Your seed: https://maprando.com/seed/tc2pHBSZc/",
+}
+
 func TestRandomizeHandler(t *testing.T) {
 	// Mock the roller to avoid network calls
 	originalRoller := roller

@@ -6,9 +6,20 @@ type RequestIn struct {
 	Flags  string `json:"flags,omitempty"`
 	Title  string `json:"title,omitempty"`
 }
+type RequestIn2 struct {
+	Args       string `json:"args"`
+	Source     string `json:"source"`
+	SourceInfo string `json:"source_info,omitempty"`
+}
 
 type ResponseOut struct {
 	SeedURL string `json:"seed_url"`
+}
+type ResponseOut2 struct {
+	SeedURL  string `json:"seed_url"`
+	SeedHash string `json:"seed_hash"`
+	Info     string `json:"info"`
+	Message  string `json:"message"`
 }
 
 type RequestMapRando struct {
@@ -18,5 +29,6 @@ type RequestMapRando struct {
 }
 
 type ResponseMapRando struct {
-	SeedURL string `json:"seed_url"`
+	SeedURL  string `json:"seed_url"`
+	SeedHash string `json:"seed_hash"`
 }

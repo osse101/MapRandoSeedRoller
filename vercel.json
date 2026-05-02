@@ -2,12 +2,16 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "rewrites": [
         {
+            "source": "/help",
+            "destination": "/api/help"
+        },
+        {
             "source": "/unlock",
             "destination": "/api/unlock"
         },
         {
             "source": "/(.*)",
-            "destination": "/api/index"
+            "destination": "/api/roll"
         }
     ]
 }
