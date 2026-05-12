@@ -17,13 +17,20 @@ type RequestRaw struct {
 }
 
 type ResponseOut struct {
-	SeedURL string `json:"seed_url"`
+	SeedURL  string `json:"seed_url"`
+	SeedHash string `json:"seed_hash"`
 }
 type ResponseOut2 struct {
 	SeedURL  string `json:"seed_url"`
 	SeedHash string `json:"seed_hash"`
 	Info     string `json:"info"`
 	Message  string `json:"message"`
+}
+
+type ResponseOut3 struct {
+	Status  string      `json:"status"` // "success" or "error"
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 type RequestMapRando struct {

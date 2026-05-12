@@ -2,37 +2,34 @@ package workflow
 
 import (
 	"testing"
-
-	"maprandoseedroller/lib/models"
 )
 
 func TestPrepareGameData(t *testing.T) {
 	tests := []struct {
 		name    string
-		req     models.RequestIn
+		data    string
 		wantErr bool
 	}{
 		{
-			name: "Valid s4 preset",
-			req: models.RequestIn{
-				Preset: "s4",
-				Flags:  "",
-			},
+			name:    "Valid s4 preset",
+			data:    "s4",
 			wantErr: false,
 		},
 		{
-			name: "Invalid preset",
-			req: models.RequestIn{
-				Preset: "invalid-preset",
-				Flags:  "",
-			},
+			name:    "Default values",
+			data:    "",
+			wantErr: false,
+		},
+		{
+			name:    "Invalid preset",
+			data:    "invalid-preset",
 			wantErr: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _, err := PrepareGameData(tt.req)
+			got, _, err := PrepareGameData(tt.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("PrepareGameData() error = %v, wantErr %v", err, tt.wantErr)
 				return

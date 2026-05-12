@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	svix "github.com/svix/svix-webhooks/go"
 
 	"maprandoseedroller/lib/models"
+	"maprandoseedroller/lib/workflow"
 )
 
 func InertiaWebhookHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,24 +39,22 @@ func InertiaWebhookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Now unmarshal the payload
-	var req models.RequestIn
+	var req models.RequestRaw
 	if err := json.Unmarshal(payload, &req); err != nil {
 		slog.Error("JSON unmarshal failed", slog.Any("error", err))
 		http.Error(w, "Invalid payload format", http.StatusBadRequest)
 		return
 	}
 
-	// Continue to roller logic
-	result, err := roller.ExecuteRoll(req)
+	// Delegate to manager
+	resp, err := workflow.Process(req)
 	if err != nil {
-		slog.Error("Execution failed", slog.Any("error", err))
-		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)
+		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut3{
+			Status:  "error",
+			Message: err.Error(),
+		})
 		return
 	}
 
-	err = writeResponse(result.SeedURL, w)
-	if err != nil {
-		http.Error(w, "failed to write response", http.StatusInternalServerError)
-		return
-	}
+	writeJSONResponse(w, http.StatusOK, resp)
 }

@@ -1,7 +1,6 @@
-package api
+package workflow
 
 import (
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -9,8 +8,7 @@ import (
 	"strings"
 
 	"maprandoseedroller/lib"
-	// Initialize the global slog logger definition
-	_ "maprandoseedroller/lib/logger"
+	"maprandoseedroller/lib/models"
 )
 
 type UnlockURL struct {
@@ -26,46 +24,31 @@ type UnlockResponse struct {
 	UnlockMessage string `json:"unlock_message"`
 }
 
-func UnlockHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a seed_url.")
-		return
-	}
-
-	req, err := decodeAndParseSeedURL(r)
+func ExecuteUnlock(seedURL string) (models.ResponseOut, error) {
+	req, err := parseSeedURL(seedURL)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("invalid request: %v", err), http.StatusBadRequest)
-		return
+		return models.ResponseOut{}, fmt.Errorf("invalid request: %w", err)
 	}
 	slog.Info("Received unlock request", slog.Any("request", req))
 
-	msg, err := sendUnlockRequest(*req)
+	_, err = sendUnlockRequest(*req)
 	if err != nil {
 		slog.Error("Unlock failed", slog.Any("error", err))
-		http.Error(w, fmt.Sprintf("unlock failed: %v", err), http.StatusInternalServerError)
-		return
+		return models.ResponseOut{}, fmt.Errorf("unlock failed: %w", err)
 	}
 
-	err = writeUnlockResponse(msg, w)
-	if err != nil {
-		http.Error(w, "failed to write response", http.StatusInternalServerError)
-		return
-	}
+	return models.ResponseOut{
+		SeedURL: seedURL,
+	}, nil
 }
 
-func decodeAndParseSeedURL(r *http.Request) (*UnlockRequest, error) {
-	var unlockURL UnlockURL
-	if err := json.NewDecoder(r.Body).Decode(&unlockURL); err != nil {
-		return nil, err
-	}
-	defer r.Body.Close()
-
-	if unlockURL.SeedURL == "" {
+func parseSeedURL(seedURL string) (*UnlockRequest, error) {
+	if seedURL == "" {
 		return nil, fmt.Errorf("missing seed_url")
 	}
 
 	var req UnlockRequest
-	req.BaseURL = strings.TrimSuffix(unlockURL.SeedURL, "/")
+	req.BaseURL = strings.TrimSuffix(seedURL, "/")
 
 	// Extract seed ID from the end of the URL
 	parts := strings.Split(req.BaseURL, "/")
@@ -100,12 +83,4 @@ func sendUnlockRequest(req UnlockRequest) (string, error) {
 	}
 
 	return "Seed unlocked.", nil
-}
-
-func writeUnlockResponse(UnlockMessage string, w http.ResponseWriter) error {
-	res := UnlockResponse{
-		UnlockMessage: UnlockMessage,
-	}
-	w.Header().Set("Content-Type", "application/json")
-	return json.NewEncoder(w).Encode(res)
 }

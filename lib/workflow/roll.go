@@ -1,6 +1,9 @@
 package workflow
 
 import (
+	"slices"
+	"strings"
+
 	"maprandoseedroller/lib"
 	"maprandoseedroller/lib/models"
 	"maprandoseedroller/lib/parser"
@@ -8,8 +11,8 @@ import (
 	"maprandoseedroller/preset"
 )
 
-func ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
-	gameData, isDev, err := PrepareGameData(req)
+func ExecuteRoll(data string) (models.ResponseOut, error) {
+	gameData, isDev, err := PrepareGameData(data)
 	if err != nil {
 		return models.ResponseOut{}, err
 	}
@@ -28,22 +31,41 @@ func ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
 	return resp, nil
 }
 
-// PrepareGameData handles lexing flags, loading templates, and hydrating game data.
-func PrepareGameData(req models.RequestIn) ([]byte, bool, error) {
-	//Parse flags
+func PrepareGameData(data string) ([]byte, bool, error) {
+	//Get Keywords
 	flagTable := lib.MergeAndSortAliases(
 		models.ObjectiveAliases,
 		models.ItemAliases,
 		models.FlagAliases,
 	)
+	validPresets := preset.GetPresetNames()
 
-	tokens, err := parser.Lex(req.Flags, flagTable)
+	// Separate preset and flags
+	words := strings.Split(data, " ")
+	selectedPreset := "s5"
+	flags := ""
+
+	switch len(words) {
+	case 0:
+	case 1:
+		if slices.Contains(validPresets, data) {
+			selectedPreset = data
+		} else {
+			flags = data
+		}
+	default:
+		selectedPreset = words[0]
+		flags = words[1]
+	}
+
+	// Parse Flags
+	tokens, err := parser.Lex(flags, flagTable)
 	if err != nil {
 		return nil, false, err
 	}
 
 	//Write json preset
-	tmpl, err := preset.LoadTemplate(req.Preset)
+	tmpl, err := preset.LoadTemplate(selectedPreset)
 	if err != nil {
 		return nil, false, err
 	}

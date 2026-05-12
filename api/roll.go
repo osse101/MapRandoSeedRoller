@@ -5,26 +5,12 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"strings"
 
 	// Initialize the global slog logger definition
 	_ "maprandoseedroller/lib/logger"
 	"maprandoseedroller/lib/models"
 	"maprandoseedroller/lib/workflow"
-	"maprandoseedroller/preset"
 )
-
-type Roller interface {
-	ExecuteRoll(req models.RequestIn) (models.ResponseOut, error)
-}
-
-type defaultRoller struct{}
-
-func (d defaultRoller) ExecuteRoll(req models.RequestIn) (models.ResponseOut, error) {
-	return workflow.ExecuteRoll(req)
-}
-
-var roller Roller = defaultRoller{}
 
 func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -39,23 +25,21 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	slog.Info("Received request", slog.Any("request", req))
 
-	result, err := roller.ExecuteRoll(*req)
+	// Delegate to manager
+	resp, err := workflow.Process(*req)
 	if err != nil {
-		slog.Error("Randomization failed", slog.Any("error", err))
-		http.Error(w, fmt.Sprintf("randomization failed: %v", err), http.StatusInternalServerError)
+		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut3{
+			Status:  "error",
+			Message: err.Error(),
+		})
 		return
 	}
-	slog.Info("Randomization successful", slog.Any("result", result))
 
-	err = writeResponse(result.SeedURL, w)
-	if err != nil {
-		http.Error(w, "failed to write response", http.StatusInternalServerError)
-		return
-	}
+	writeJSONResponse(w, http.StatusOK, resp)
 }
 
-func decode(r *http.Request) (*models.RequestIn, error) {
-	var req models.RequestIn
+func decode(r *http.Request) (*models.RequestRaw, error) {
+	var req models.RequestRaw
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return nil, err
 	}
@@ -63,21 +47,10 @@ func decode(r *http.Request) (*models.RequestIn, error) {
 	return &req, nil
 }
 
-func writeResponse(seedURL string, w http.ResponseWriter) error {
-	res := models.ResponseOut{
-		SeedURL: seedURL,
-	}
+func writeJSONResponse(w http.ResponseWriter, statusCode int, payload models.ResponseOut3) {
 	w.Header().Set("Content-Type", "application/json")
-	return json.NewEncoder(w).Encode(res)
-}
-
-func GetHelpText(input string) string {
-	switch input {
-	case "preset", "presets":
-		presets := preset.GetPresetNames()
-		return "Available presets: " + strings.Join(presets, ", ")
-	case "flag", "flags":
-		return "These are your flags:"
+	w.WriteHeader(statusCode)
+	if err := json.NewEncoder(w).Encode(payload); err != nil {
+		slog.Error("Failed to encode JSON response", slog.Any("error", err))
 	}
-	return "Usage: !roll <preset> <flags>.  For more help use !help presets or !help flags"
 }
