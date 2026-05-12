@@ -1,5 +1,5 @@
 {
-    "version": 121,
+    "version": 122,
     "name": "Default",
     "skill_assumption_settings": {
         "preset": "Basic",
@@ -39,7 +39,7 @@
             },
             {
                 "id": 76,
-                "name": "canWalljump",
+                "name": "canWallJump",
                 "enabled": true
             },
             {
@@ -94,12 +94,12 @@
             },
             {
                 "id": 77,
-                "name": "canPreciseWalljump",
+                "name": "canPreciseWallJump",
                 "enabled": false
             },
             {
                 "id": 80,
-                "name": "canConsecutiveWalljump",
+                "name": "canConsecutiveWallJump",
                 "enabled": false
             },
             {
@@ -110,11 +110,6 @@
             {
                 "id": 89,
                 "name": "canIBJ",
-                "enabled": false
-            },
-            {
-                "id": 123,
-                "name": "canPseudoScrew",
                 "enabled": false
             },
             {
@@ -130,6 +125,11 @@
             {
                 "id": 136,
                 "name": "canShinechargeMovement",
+                "enabled": false
+            },
+            {
+                "id": 134,
+                "name": "canMidairShinespark",
                 "enabled": false
             },
             {
@@ -219,7 +219,7 @@
             },
             {
                 "id": 78,
-                "name": "canTrickyWalljump",
+                "name": "canTrickyWallJump",
                 "enabled": false
             },
             {
@@ -268,6 +268,11 @@
                 "enabled": false
             },
             {
+                "id": 123,
+                "name": "canPseudoScrew",
+                "enabled": false
+            },
+            {
                 "id": 126,
                 "name": "canOffScreenSuperShot",
                 "enabled": false
@@ -290,11 +295,6 @@
             {
                 "id": 244,
                 "name": "canHorizontalMidairShinespark",
-                "enabled": false
-            },
-            {
-                "id": 134,
-                "name": "canMidairShinespark",
                 "enabled": false
             },
             {
@@ -459,7 +459,7 @@
             },
             {
                 "id": 124,
-                "name": "canWalljumpWithCharge",
+                "name": "canWallJumpWithCharge",
                 "enabled": false
             },
             {
@@ -579,7 +579,7 @@
             },
             {
                 "id": 81,
-                "name": "canFastWalljumpClimb",
+                "name": "canFastWallJumpClimb",
                 "enabled": false
             },
             {
@@ -829,12 +829,12 @@
             },
             {
                 "id": 79,
-                "name": "canInsaneWalljump",
+                "name": "canInsaneWallJump",
                 "enabled": false
             },
             {
                 "id": 83,
-                "name": "canUnderwaterWalljump",
+                "name": "canUnderwaterWallJump",
                 "enabled": false
             },
             {
@@ -1064,7 +1064,7 @@
             },
             {
                 "id": 187,
-                "name": "canLongUnderwaterWalljump",
+                "name": "canLongUnderwaterWallJump",
                 "enabled": false
             },
             {
@@ -1094,7 +1094,7 @@
             },
             {
                 "id": 160,
-                "name": "canSuperJump",
+                "name": "canSuperjump",
                 "enabled": false
             },
             {
@@ -1179,7 +1179,7 @@
             },
             {
                 "id": 186,
-                "name": "canUnderwaterWalljumpBreakFree",
+                "name": "canUnderwaterWallJumpBreakFree",
                 "enabled": false
             },
             {
@@ -1498,6 +1498,13 @@
                 "enabled": false
             },
             {
+                "room_id": 59,
+                "notable_id": 14,
+                "room_name": "Big Pink",
+                "notable_name": "Zeb Damage Boost",
+                "enabled": false
+            },
+            {
                 "room_id": 61,
                 "notable_id": 1,
                 "room_name": "Pink Brinstar Wave Gate Room",
@@ -1579,13 +1586,6 @@
                 "notable_id": 3,
                 "room_name": "Cathedral Entrance",
                 "notable_name": "Left Door Frozen Sova Step",
-                "enabled": false
-            },
-            {
-                "room_id": 104,
-                "notable_id": 2,
-                "room_name": "Double Chamber",
-                "notable_name": "Shinespark through Wave Beam Door",
                 "enabled": false
             },
             {
@@ -2304,13 +2304,6 @@
             },
             {
                 "room_id": 189,
-                "notable_id": 2,
-                "room_name": "Colosseum",
-                "notable_name": "Mochtroid Suitless, HiJumpless Ice Climb",
-                "enabled": false
-            },
-            {
-                "room_id": 189,
                 "notable_id": 6,
                 "room_name": "Colosseum",
                 "notable_name": "Spike Platforming with Move Assist (Left to Right)",
@@ -2605,6 +2598,13 @@
             },
             {
                 "room_id": 189,
+                "notable_id": 2,
+                "room_name": "Colosseum",
+                "notable_name": "Mochtroid Suitless, HiJumpless Ice Climb",
+                "enabled": false
+            },
+            {
+                "room_id": 189,
                 "notable_id": 5,
                 "room_name": "Colosseum",
                 "notable_name": "Bomb Jump Water Escape",
@@ -2775,7 +2775,7 @@
                 "room_id": 7,
                 "notable_id": 3,
                 "room_name": "The Moat",
-                "notable_name": "CWJ Bomb Boost",
+                "notable_name": "Walljump Bomb Boost",
                 "enabled": false
             },
             {
@@ -2860,6 +2860,13 @@
                 "notable_id": 2,
                 "room_name": "Spore Spawn Room",
                 "notable_name": "Plasma SBA Kill from Above",
+                "enabled": false
+            },
+            {
+                "room_id": 57,
+                "notable_id": 3,
+                "room_name": "Spore Spawn Room",
+                "notable_name": "Wave SBA Kill from Above",
                 "enabled": false
             },
             {
@@ -3220,10 +3227,24 @@
                 "enabled": false
             },
             {
+                "room_id": 210,
+                "notable_id": 18,
+                "room_name": "East Sand Hall",
+                "notable_name": "Blue Suit Sand Walk",
+                "enabled": false
+            },
+            {
                 "room_id": 220,
                 "notable_id": 5,
                 "room_name": "Pants Room",
                 "notable_name": "Bomb Jump Water Escape",
+                "enabled": false
+            },
+            {
+                "room_id": 220,
+                "notable_id": 6,
+                "room_name": "Pants Room",
+                "notable_name": "Keep Blue Suit in Sand",
                 "enabled": false
             },
             {
@@ -3245,6 +3266,13 @@
                 "notable_id": 11,
                 "room_name": "West Sand Hall",
                 "notable_name": "Suitless Damage Boost (Center to Left)",
+                "enabled": false
+            },
+            {
+                "room_id": 199,
+                "notable_id": 12,
+                "room_name": "West Sand Hall",
+                "notable_name": "Blue Suit Sand Walk",
                 "enabled": false
             },
             {
@@ -3874,7 +3902,7 @@
                 "room_id": 197,
                 "notable_id": 3,
                 "room_name": "Plasma Spark Room",
-                "notable_name": "SpringFling into Top Right Door",
+                "notable_name": "Spring Fling into Top Right Door",
                 "enabled": false
             },
             {
@@ -4127,6 +4155,13 @@
                 "notable_id": 3,
                 "room_name": "East Sand Pit",
                 "notable_name": "Insane Walljump Morph",
+                "enabled": false
+            },
+            {
+                "room_id": 181,
+                "notable_id": 3,
+                "room_name": "Watering Hole",
+                "notable_name": "Double Frozen Zeb Item Collect Shinespark Escape",
                 "enabled": false
             },
             {
@@ -4532,6 +4567,21 @@
     },
     "quality_of_life_settings": {
         "preset": "Default",
+        "enhanced_map_settings": {
+            "preset": "Yes",
+            "blue_doors": "Visible",
+            "gray_doors": "Visible",
+            "ammo_doors": "Visible",
+            "beam_doors": "Visible",
+            "heat": "Visible",
+            "water": "Visible",
+            "lava": "Visible",
+            "acid": "Visible",
+            "walls": "Enhanced",
+            "objectives": "Icon",
+            "map_station": "Icon",
+            "refill_station": "Icon"
+        },
         "initial_map_reveal_settings": {
             "preset": "Maps",
             "map_stations": "Full",
@@ -4550,14 +4600,20 @@
         "item_markers": "3-Tiered",
         "room_outline_revealed": true,
         "opposite_area_revealed": false,
+        "hazard_markers": true,
         "mother_brain_fight": "Short",
         "supers_double": true,
+        "escape_autosave": true,
         "escape_movement_items": true,
         "escape_refill": true,
         "escape_enemies_cleared": true,
         "fast_elevators": true,
         "fast_doors": true,
         "fast_pause_menu": true,
+        "fast_saves": true,
+        "fast_baby_cutscene": true,
+        "fast_mother_brain_cutscene": true,
+        "fast_decompression": true,
         "respin": false,
         "infinite_space_jump": false,
         "momentum_conservation": false,
@@ -4570,16 +4626,20 @@
             "spring_ball": "Death",
             "yapping_maw": "Death",
             "auto_reserve": "Death",
-            "x_mode": "Death"
+            "x_mode": "Death",
+            "sprite_overflow": "Silent"
         },
+        "fix_blue_echoes": true,
         "energy_station_reserves": false,
         "etank_refill": "Vanilla",
         "disableable_etanks": "Standard",
         "reserve_backward_transfer": false,
         "enemy_drops": "Buffed",
         "early_save": true,
+        "ammo_refill_all": true,
         "persist_flash_suit": false,
-        "persist_blue_suit": false
+        "persist_blue_suit": false,
+        "camera_fixes": true
     },
     "objective_settings": {
         "preset": "Bosses",
@@ -4700,7 +4760,6 @@
         "disable_bluesuit": false,
         "enable_major_glitches": false,
         "speed_booster": "Vanilla",
-        "ultra_low_qol": false,
         "race_mode": false,
         "random_seed": null
     }

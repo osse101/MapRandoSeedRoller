@@ -18,7 +18,7 @@ var TemplateMap = map[string]string{
 	"s4":           "Community_Race_Season_4.json",
 	"s5":           "Community_Race_Season_5.json",
 	"default":      "Default.json",
-	"expert":       "Expert_Challenge_Season_5.json",
+	"expert":       "Summer_Series_Expert_Challenge.json",
 	"mentor":       "Mentor_Tournament.json",
 	"objectives":   "Winter_Tournament_-_4_Random_Objectives.json",
 	"suits":        "Winter_Tournament_-_Double_Suit.json",

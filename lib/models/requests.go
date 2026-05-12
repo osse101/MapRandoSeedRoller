@@ -1,15 +1,19 @@
 package models
 
+import "encoding/json"
+
 type RequestIn struct {
 	Preset string `json:"preset"`
 	Source string `json:"source"`
 	Flags  string `json:"flags,omitempty"`
 	Title  string `json:"title,omitempty"`
 }
-type RequestIn2 struct {
-	Args       string `json:"args"`
-	Source     string `json:"source"`
-	SourceInfo string `json:"source_info,omitempty"`
+
+type RequestRaw struct {
+	Event  string          `json:"event"`  // e.g. rt.raceend
+	Action string          `json:"action"` // e.g. unlock
+	Source string          `json:"source"`
+	Data   json.RawMessage `json:"data"`
 }
 
 type ResponseOut struct {
