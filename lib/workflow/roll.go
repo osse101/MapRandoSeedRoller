@@ -1,6 +1,7 @@
 package workflow
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -11,21 +12,16 @@ import (
 	"maprandoseedroller/preset"
 )
 
-func ExecuteRoll(data string) (models.ResponseOut, error) {
+func ExecuteRoll(data string) (models.SeedData, error) {
 	gameData, isDev, err := PrepareGameData(data)
 	if err != nil {
-		return models.ResponseOut{}, err
+		return models.SeedData{}, err
 	}
 
 	//Send to MapRando
-	seedURL, err := randomize.Randomize(gameData, isDev)
+	resp, err := randomize.Randomize(gameData, isDev)
 	if err != nil {
-		return models.ResponseOut{}, err
-	}
-
-	//Determine Discord/Racetime fields
-	var resp = models.ResponseOut{
-		SeedURL: seedURL,
+		return models.SeedData{}, err
 	}
 
 	return resp, nil
@@ -41,21 +37,22 @@ func PrepareGameData(data string) ([]byte, bool, error) {
 	validPresets := preset.GetPresetNames()
 
 	// Separate preset and flags
-	words := strings.Split(data, " ")
 	selectedPreset := "s5"
 	flags := ""
-
-	switch len(words) {
-	case 0:
-	case 1:
-		if slices.Contains(validPresets, data) {
+	if len(data) > 0{
+		words := strings.Split(data, " ")
+		switch len(words) {
+		case 0:
+		case 1:
 			selectedPreset = data
-		} else {
-			flags = data
+		default:
+			selectedPreset = words[0]
+			flags = words[1]
 		}
-	default:
-		selectedPreset = words[0]
-		flags = words[1]
+	}
+
+	if !slices.Contains(validPresets, selectedPreset) {
+		return nil, false, fmt.Errorf("invalid preset selected.")
 	}
 
 	// Parse Flags

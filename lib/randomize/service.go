@@ -5,7 +5,7 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
-func Randomize(data []byte, isDev bool) (string, error) {
+func Randomize(data []byte, isDev bool) (models.SeedData, error) {
 	//Make request to Map Rando
 	r := models.RequestMapRando{
 		Settings:     data,
@@ -14,7 +14,7 @@ func Randomize(data []byte, isDev bool) (string, error) {
 
 	resp, err := MakeRequest(lib.BuildSite((isDev)), r)
 	if err != nil {
-		return "", err
+		return models.SeedData{}, err
 	}
 
 	//Return result

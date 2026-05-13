@@ -10,7 +10,7 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
-var mockResult = models.ResponseOut3{
+var mockResult = models.ResponseOut{
 	Status:  "success",
 	Message: "Your seed: https://maprando.com/seed/tc2pHBSZc/",
 	Data: map[string]string{
@@ -34,11 +34,11 @@ func TestRandomizeHandler(t *testing.T) {
 		t.Errorf("Expected status 200, got %d", rec.Code)
 	}
 
-	var res models.ResponseOut3
+	var res models.ResponseOut
 	if err := json.NewDecoder(rec.Body).Decode(&res); err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
 	}
-	resData, ok := res.Data.(models.ResponseOut)
+	resData, ok := res.Data.(models.SeedData)
 	if !ok {
 		t.Fatalf("expected result to be ResponseOut, got %T", res.Data)
 	}

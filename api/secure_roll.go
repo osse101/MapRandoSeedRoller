@@ -49,7 +49,7 @@ func InertiaWebhookHandler(w http.ResponseWriter, r *http.Request) {
 	// Delegate to manager
 	resp, err := workflow.Process(req)
 	if err != nil {
-		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut3{
+		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
 			Status:  "error",
 			Message: err.Error(),
 		})

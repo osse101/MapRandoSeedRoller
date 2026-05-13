@@ -28,7 +28,7 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	// Delegate to manager
 	resp, err := workflow.Process(*req)
 	if err != nil {
-		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut3{
+		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
 			Status:  "error",
 			Message: err.Error(),
 		})
@@ -47,7 +47,7 @@ func decode(r *http.Request) (*models.RequestRaw, error) {
 	return &req, nil
 }
 
-func writeJSONResponse(w http.ResponseWriter, statusCode int, payload models.ResponseOut3) {
+func writeJSONResponse(w http.ResponseWriter, statusCode int, payload models.ResponseOut) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	if err := json.NewEncoder(w).Encode(payload); err != nil {

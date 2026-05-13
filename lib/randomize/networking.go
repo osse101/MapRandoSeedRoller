@@ -14,16 +14,16 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
-func MakeRequest(baseURL string, settings models.RequestMapRando) (string, error) {
+func MakeRequest(baseURL string, settings models.RequestMapRando) (models.SeedData, error) {
 	body, contentType, err := buildMultipartRequest(settings)
 	if err != nil {
-		return "", err
+		return models.SeedData{}, err
 	}
 
 	slog.Info("Sending request", slog.String("endpoint", baseURL+"/randomize"))
 	req, err := http.NewRequest("POST", baseURL+"/randomize", body)
 	if err != nil {
-		return "", err
+		return models.SeedData{}, err
 	}
 	req.Header.Set("Content-Type", contentType)
 
@@ -31,18 +31,18 @@ func MakeRequest(baseURL string, settings models.RequestMapRando) (string, error
 	resp, err := client.Do(req)
 	if err != nil {
 		slog.Error("HTTP request failed", slog.Any("error", err))
-		return "", err
+		return models.SeedData{}, err
 	}
 	slog.Info("Response received", slog.String("status", resp.Status))
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("unexpected status: %s", resp.Status)
+		return models.SeedData{}, fmt.Errorf("unexpected status: %s", resp.Status)
 	}
 
 	var result models.ResponseMapRando
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", fmt.Errorf("failed to decode response JSON: %w", err)
+		return models.SeedData{}, fmt.Errorf("failed to decode response JSON: %w", err)
 	}
 
 	seedURL := result.SeedURL
@@ -50,7 +50,10 @@ func MakeRequest(baseURL string, settings models.RequestMapRando) (string, error
 		seedURL = baseURL + seedURL
 	}
 
-	return seedURL, nil
+	return models.SeedData{
+		SeedURL:  seedURL,
+		SeedHash: result.SeedHash,
+	}, nil
 }
 
 func buildMultipartRequest(data interface{}) (*bytes.Buffer, string, error) {
