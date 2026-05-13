@@ -33,13 +33,14 @@ func PrepareGameData(data string) ([]byte, bool, error) {
 		models.ObjectiveAliases,
 		models.ItemAliases,
 		models.FlagAliases,
+		models.LayoutAliases,
 	)
 	validPresets := preset.GetPresetNames()
 
 	// Separate preset and flags
 	selectedPreset := "s5"
 	flags := ""
-	if len(data) > 0{
+	if len(data) > 0 {
 		words := strings.Split(data, " ")
 		switch len(words) {
 		case 0:

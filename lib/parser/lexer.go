@@ -29,15 +29,24 @@ func Lex(input string, aliases []models.AliasEntry) ([]models.Token, error) {
 				// Determine TriState based on the chunk's casing
 				state := DetermineTriState(chunk)
 
+				// Advance past alias
+				input = input[len(entry.ShortName):]
+
+				// Greedily capture trailing digits/dots as raw value
+				rawEnd := 0
+				for rawEnd < len(input) && (input[rawEnd] >= '0' && input[rawEnd] <= '9' || input[rawEnd] == '.') {
+					rawEnd++
+				}
+				rawVal := input[:rawEnd]
+				input = input[rawEnd:]
+
 				// Create token
 				tokens = append(tokens, models.Token{
-					Flag:  lastFlag,
-					ID:    entry.LongName,
-					Value: state,
+					Flag:     lastFlag,
+					ID:       entry.LongName,
+					Value:    state,
+					RawValue: rawVal,
 				})
-
-				// Advance input pointer
-				input = input[len(entry.ShortName):]
 				matchFound = true
 				break
 			}

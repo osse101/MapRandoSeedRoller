@@ -94,3 +94,10 @@ var FlagAliases = map[string]string{
 	"o": "objective_options",
 	"l": "map_layout",
 }
+
+var LayoutAliases = map[string]string{
+	"tame":     "Tame",
+	"wild":     "Wild",
+	"standard": "Standard",
+	"vanilla":  "Vanilla",
+}

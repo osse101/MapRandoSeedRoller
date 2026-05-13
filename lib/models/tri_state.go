@@ -1,7 +1,5 @@
 package models
 
-import "strings"
-
 type TriState int
 
 const (
@@ -10,18 +8,20 @@ const (
 	False
 )
 
-type Token struct {
-	Flag  rune
-	ID    string
-	Value TriState
+func (t TriState) String() string {
+	switch t {
+	case True:
+		return "Yes"
+	case False:
+		return "No"
+	default:
+		return "Maybe"
+	}
 }
 
-func DetermineState(input string) TriState {
-	if input == strings.ToUpper(input) {
-		return True
-	}
-	if input == strings.ToLower(input) {
-		return False
-	}
-	return Maybe
+type Token struct {
+	Flag     rune
+	ID       string
+	Value    TriState
+	RawValue string // trailing numeric/text argument, e.g. "0.95" or "3"
 }

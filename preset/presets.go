@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const DevVersion = 121
+const DevVersion = 122
 
 var TemplateMap = map[string]string{
 	"s2":           "Community_Race_Season_2.json",
