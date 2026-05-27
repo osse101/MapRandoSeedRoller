@@ -24,6 +24,7 @@ func InertiaWebhookHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Read the RAW body bytes
 	// We MUST do this before any JSON decoding to preserve the signature integrity
+	defer r.Body.Close()
 	payload, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Failed to read request body", http.StatusBadRequest)

@@ -39,11 +39,11 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func decode(r *http.Request) (*models.RequestRaw, error) {
+	defer r.Body.Close()
 	var req models.RequestRaw
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
 	return &req, nil
 }
 

@@ -10,15 +10,15 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
-var mockResult = models.ResponseOut{
-	Status:  "success",
-	Message: "Your seed: https://maprando.com/seed/tc2pHBSZc/",
-	Data: map[string]string{
-		"seedURL":  "https://maprando.com/seed/tc2pHBSZc/",
-		"seedHash": "YARD YARD YARD YARD",
-	},
-}
-
+// Example ResponseOut
+// var mockResult = models.ResponseOut{
+// 	Status:  "success",
+// 	Message: "Your seed: https://maprando.com/seed/tc2pHBSZc/",
+// 	Data: map[string]string{
+// 		"seedURL":  "https://maprando.com/seed/tc2pHBSZc/",
+// 		"seedHash": "YARD YARD YARD YARD",
+// 	},
+// }
 func TestRandomizeHandler(t *testing.T) {
 	handler := http.HandlerFunc(RandomizeHandler)
 

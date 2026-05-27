@@ -41,7 +41,7 @@ func PrepareGameData(data string) ([]byte, bool, error) {
 	selectedPreset := "s5"
 	flags := ""
 	if len(data) > 0 {
-		words := strings.Split(data, " ")
+		words := strings.SplitN(data, " ", 2)
 		switch len(words) {
 		case 0:
 		case 1:
@@ -53,7 +53,7 @@ func PrepareGameData(data string) ([]byte, bool, error) {
 	}
 
 	if !slices.Contains(validPresets, selectedPreset) {
-		return nil, false, fmt.Errorf("invalid preset selected.")
+		return nil, false, fmt.Errorf("invalid preset selected")
 	}
 
 	// Parse Flags
