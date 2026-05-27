@@ -1,6 +1,6 @@
 # Seed Roller
 
-A bot and API for rolling randomizer seeds, with support for presets, overrides, and race mode.  The bot holds the spoiler token and can unlock the spoiler log upon request.
+A bot and API for rolling randomizer seeds, with support for presets, overrides, and race mode. The bot holds the spoiler token and can unlock the spoiler log upon request.
 
 ---
 
@@ -11,8 +11,8 @@ A bot and API for rolling randomizer seeds, with support for presets, overrides,
   - [Value Overrides](#value-overrides)
   - [Override Values Reference](#override-values-reference)
 - [API Reference](#api-reference)
-  - [POST /roll](#post-roll)
-  - [POST /unlock](#post-unlock)
+  - [POST /api/roll](#post-apiroll)
+  - [Actions](#actions)
 
 ---
 
@@ -22,33 +22,33 @@ A bot and API for rolling randomizer seeds, with support for presets, overrides,
 !roll <args>
 ```
 
-| Example | Result |
-|---|---|
-| `!roll` | Rolls a seed using the current season's preset |
-| `!roll s5` | Rolls a seed using the `s5` preset |
+| Example              | Result                                                     |
+| -------------------- | ---------------------------------------------------------- |
+| `!roll`              | Rolls a seed using the current season's preset             |
+| `!roll s5`           | Rolls a seed using the `s5` preset                         |
 | `!roll s5 RDS:MORPH` | Rolls a seed using `s5` with the specified field overrides |
 
 ---
 
 ### Presets
 
-| Preset | Difficulty | Logic | Notes |
-|---|---|---|---|
-| `s2` | Hard | Tricky | |
-| `s3` | Hard | Tricky | |
-| `s3a` | Hard | Tricky | Save the animals |
-| `s4` | Hard | Tricky | |
-| `s5` | Hard | Tricky | Current season default |
-| `default` | Normal | Basic | This is Map Rando's introductory preset |
-| `expert` | Expert | Challenge | Based on s5 |
-| `mentor` | Medium | Basic | |
-| `objectives` | Hard | Tricky | Same as s4; objectives set via args |
-| `suits` | Hard | Tricky | Starting Gravity + Varia; rest is s4 |
-| `g91` | Hard | Tricky | Starting Gravity + 9 E-Tanks + 1 Reserve; rest is s4 |
-| `draft` | Hard | Tricky | Same as s4; starting items set via args |
-| `metroids` | Hard | Tricky | Metroid objectives, no Mother Brain 2; rest is s4 |
-| `noobjectives` | Hard | Tricky | No objectives; rest is s4 |
-| `vmode` | Hard | Tricky | Starting Varia, Grapple, HiJump, Ice, Springball; rest is s4 |
+| Preset         | Difficulty | Logic     | Notes                                                        |
+| -------------- | ---------- | --------- | ------------------------------------------------------------ |
+| `s2`           | Hard       | Tricky    |                                                              |
+| `s3`           | Hard       | Tricky    |                                                              |
+| `s3a`          | Hard       | Tricky    | Save the animals                                             |
+| `s4`           | Hard       | Tricky    |                                                              |
+| `s5`           | Hard       | Tricky    | Current season default                                       |
+| `default`      | Normal     | Basic     | This is Map Rando's introductory preset                      |
+| `expert`       | Expert     | Challenge | Based on s5                                                  |
+| `mentor`       | Medium     | Basic     |                                                              |
+| `objectives`   | Hard       | Tricky    | Same as s4; objectives set via args                          |
+| `suits`        | Hard       | Tricky    | Starting Gravity + Varia; rest is s4                         |
+| `g91`          | Hard       | Tricky    | Starting Gravity + 9 E-Tanks + 1 Reserve; rest is s4         |
+| `draft`        | Hard       | Tricky    | Same as s4; starting items set via args                      |
+| `metroids`     | Hard       | Tricky    | Metroid objectives, no Mother Brain 2; rest is s4            |
+| `noobjectives` | Hard       | Tricky    | No objectives; rest is s4                                    |
+| `vmode`        | Hard       | Tricky    | Starting Varia, Grapple, HiJump, Ice, Springball; rest is s4 |
 
 ---
 
@@ -56,22 +56,22 @@ A bot and API for rolling randomizer seeds, with support for presets, overrides,
 
 Overrides are passed as flags after the preset name. Letter case controls the override behaviour:
 
-| Case | Meaning |
-|---|---|
-| `UPPERCASE` | Enable |
+| Case        | Meaning |
+| ----------- | ------- |
+| `UPPERCASE` | Enable  |
 | `lowercase` | Disable |
-| `miXEDcasE` | Maybe |
+| `miXEDcasE` | Maybe   |
 
 **Available flags:**
 
-| Flag | Description |
-|---|---|
-| `R` | Race mode |
-| `D` | Use dev site |
-| `X:<value>` | Escape timer multiplier |
-| `S:<items>` | Starting items |
-| `O:<objectives>` | Objectives |
-| `L:<layout>` | Map layout |
+| Flag             | Description             |
+| ---------------- | ----------------------- |
+| `R`              | Race mode               |
+| `D`              | Use dev site            |
+| `X:<value>`      | Escape timer multiplier |
+| `S:<items>`      | Starting items          |
+| `O:<objectives>` | Objectives              |
+| `L:<layout>`     | Map layout              |
 
 ---
 
@@ -99,57 +99,93 @@ vanilla, small, standard, wild
 
 ## API Reference
 
-### POST /roll
+The Seed Roller API accepts requests as JSON payloads.
 
-Rolls a new seed and returns its URL.
+### POST /api/roll
+
+Main endpoint for interacting with the API. Also available at `/api/secure_roll` for Svix-verified webhooks.
 
 **Request**
 
-| Field | Type | Description |
-|---|---|---|
-| `args` | string | Seed rolling parameters such as Preset and field override arguments |
-| `source` | string | The source identifier for the request |
-| `source_info` | string | (TBD) Data adding context to the request such as current title and event name |
+| Field    | Type   | Description                                        |
+| -------- | ------ | -------------------------------------------------- |
+| `action` | string | Action to perform (e.g., `roll`, `unlock`, `help`) |
+| `event`  | string | Acknowledge an event (e.g., `seed.finished`)       |
+| `source` | string | The source identifier for the request              |
+| `data`   | any    | Payload specific to the action or event            |
+
+_Note: Exactly one of `action` or `event` should be provided._
 
 **Response**
 
-| Field | Type | Description |
-|---|---|---|
-| `seed_url` | string | The URL of the generated seed |
-| `seed_hash` | string | The ingame hash code for the seed |
-| `info` | string | A title for this 
+| Field     | Type   | Description                                                      |
+| --------- | ------ | ---------------------------------------------------------------- |
+| `status`  | string | `"success"` or `"error"`                                         |
+| `message` | string | Optional status or error message                                 |
+| `data`    | object | Optional action-specific response data (e.g., seed URL and hash) |
+
+---
+
+### Actions
+
+#### `roll`
+
+Rolls a new seed using the provided preset and flags.
+
+**Request `data`**
+A string specifying seed rolling parameters, such as the preset and field override flags. (e.g., `"s5 RDS:MORPH"`)
+
+**Response `data`**
+
+| Field       | Type   | Description                        |
+| ----------- | ------ | ---------------------------------- |
+| `seed_url`  | string | The URL of the generated seed      |
+| `seed_hash` | string | The in-game hash code for the seed |
 
 **Example**
 
 ```json
 // Request
 {
-  "args": "s5 RDS:MORPH",
+  "action": "roll",
   "source": "racetime",
-  "source_info": "s5 preset"
+  "data": "s5 RDS:MORPH"
 }
 
 // Response
 {
-  "seed_url": "https://maprando.com/seed/tc2pHBSZc/",
-  "seed_hash": "YARD YARD YARD YARD",
-  "info": "s5 preset | https://maprando.com/seed/tc2pHBSZc/ | YARD YARD YARD YARD",
-  "message": "Your seed: https://maprando.com/seed/tc2pHBSZc/"
+  "status": "success",
+  "data": {
+    "seed_url": "https://maprando.com/seed/tc2pHBSZc/",
+    "seed_hash": "YARD YARD YARD YARD"
+  }
 }
 ```
 
 ---
 
-### POST /unlock
+#### `unlock`
 
-Unlocks a previously generated seed (e.g. after a race concludes).
+Unlocks a previously generated seed (e.g., after a race concludes).
 
-**Request**
-
-| Field | Type | Description |
-|---|---|---|
-| `seed_url` | string | The URL of the seed to unlock |
+**Request `data`**
+A string formatting the URL of the seed to unlock. (e.g., `"https://maprando.com/seed/tc2pHBSZc/"`)
 
 **Response**
+Returns a `"success"` status with no `data`.
 
-Returns `200 OK` with an empty body on success.
+**Example**
+
+```json
+// Request
+{
+  "action": "unlock",
+  "source": "racetime",
+  "data": "https://maprando.com/seed/tc2pHBSZc/"
+}
+
+// Response
+{
+  "status": "success"
+}
+```
