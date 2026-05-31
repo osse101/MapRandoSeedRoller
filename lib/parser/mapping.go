@@ -20,7 +20,7 @@ func Hydrate(template map[string]interface{}, tokens []models.Token) ([]byte, bo
 	}
 
 	// --- Step 2: apply PresetFields onto template ---
-	if len(tokens) > 0{
+	if len(tokens) > 0 {
 		SetNestedValue(template, "name", "Custom")
 	}
 	if err := applyPresetFields(template, fields); err != nil {
@@ -239,4 +239,3 @@ func SetNestedValue(m map[string]interface{}, path string, value interface{}) {
 	}
 	m[parts[len(parts)-1]] = value
 }
-
