@@ -50,10 +50,11 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			msg := fmt.Sprintf("Your seed is ready: %s | %s.", seedData.SeedURL, seedData.SeedHash)
 			iResp := models.InertiaResponseOut{
 				URL:     seedData.SeedURL,
 				Hash:    seedData.SeedHash,
-				Message: "Your seed is ready.",
+				Message: msg,
 			}
 
 			writeInertiaJSONResponse(w, http.StatusOK, iResp)
