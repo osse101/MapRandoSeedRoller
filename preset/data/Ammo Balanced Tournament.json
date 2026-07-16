@@ -1,6 +1,6 @@
 {
-    "version": 121,
-    "name": "Community Race Season 5",
+    "version": 122,
+    "name": "ammo balanced tournament",
     "skill_assumption_settings": {
         "preset": "Hard",
         "shinespark_tiles": 20,
@@ -11,14 +11,14 @@
         "farm_time_limit": 90,
         "gate_glitch_leniency": 14,
         "door_stuck_leniency": 2,
-        "bomb_into_cf_leniency": 5,
-        "jump_into_cf_leniency": 9,
+        "spike_suit_leniency": 15,
         "flash_suit_distance": 5,
         "blue_suit_distance": 7,
-        "spike_suit_leniency": 15,
         "spike_xmode_leniency": 2,
         "spike_speed_keep_leniency": 4,
         "elevator_cf_leniency": 8,
+        "bomb_into_cf_leniency": 5,
+        "jump_into_cf_leniency": 9,
         "crystal_spark_leniency": 14,
         "phantoon_proficiency": 0.5,
         "draygon_proficiency": 0.5,
@@ -1358,6 +1358,13 @@
                 "enabled": true
             },
             {
+                "room_id": 173,
+                "notable_id": 1,
+                "room_name": "Fish Tank",
+                "notable_name": "Top Left Direct Jump",
+                "enabled": true
+            },
+            {
                 "room_id": 178,
                 "notable_id": 2,
                 "room_name": "Mama Turtle Room",
@@ -1751,13 +1758,6 @@
             },
             {
                 "room_id": 173,
-                "notable_id": 1,
-                "room_name": "Fish Tank",
-                "notable_name": "Top Left Direct Jump",
-                "enabled": false
-            },
-            {
-                "room_id": 173,
                 "notable_id": 4,
                 "room_name": "Fish Tank",
                 "notable_name": "Room Entry Fall onto Frozen Fish",
@@ -2020,13 +2020,6 @@
                 "notable_id": 4,
                 "room_name": "Big Pink",
                 "notable_name": "Fast Mockball Leave With Spark",
-                "enabled": false
-            },
-            {
-                "room_id": 58,
-                "notable_id": 2,
-                "room_name": "Dachora Room",
-                "notable_name": "Tankless Bootless Shinespark",
                 "enabled": false
             },
             {
@@ -2306,7 +2299,7 @@
                 "room_id": 189,
                 "notable_id": 6,
                 "room_name": "Colosseum",
-                "notable_name": "Spike Platforming with Move Assist (Left to Right)",
+                "notable_name": "Spike Platforming with Move Assist",
                 "enabled": false
             },
             {
@@ -2496,6 +2489,13 @@
                 "notable_id": 9,
                 "room_name": "Big Pink",
                 "notable_name": "Zeb Ice Clip",
+                "enabled": false
+            },
+            {
+                "room_id": 58,
+                "notable_id": 2,
+                "room_name": "Dachora Room",
+                "notable_name": "Tankless Bootless Shinespark",
                 "enabled": false
             },
             {
@@ -4270,7 +4270,7 @@
         "item_pool": [
             {
                 "item": "Missile",
-                "count": 45
+                "count": 50
             },
             {
                 "item": "ETank",
@@ -4282,11 +4282,11 @@
             },
             {
                 "item": "Super",
-                "count": 12
+                "count": 10
             },
             {
                 "item": "PowerBomb",
-                "count": 9
+                "count": 10
             },
             {
                 "item": "Charge",
@@ -4669,6 +4669,20 @@
             "objectives": "Icon",
             "map_station": "Icon",
             "refill_station": "Icon"
+        },
+        "map_station_activation_settings": {
+            "preset": "Full",
+            "save_stations": "Full",
+            "refill_stations": "Full",
+            "ship": "Full",
+            "objectives": "Full",
+            "area_transitions": "Full",
+            "items1": "Full",
+            "items2": "Full",
+            "items3": "Full",
+            "items4": "Full",
+            "other": "Full",
+            "sub_area": "Same"
         },
         "initial_map_reveal_settings": {
             "preset": null,

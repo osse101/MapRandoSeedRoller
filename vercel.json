@@ -6,7 +6,7 @@
             "destination": "/api/secure_roll"
         },
         {
-            "source": "/(.*)",
+            "source": "/roll",
             "destination": "/api/roll"
         }
     ]

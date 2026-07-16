@@ -23,7 +23,7 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 			request := models.RequestRaw{
 				Action: "roll",
 				Source: "inertia",
-				Data:   json.RawMessage(`"mentor"`),
+				Data:   json.RawMessage(`"ammo-balance"`),
 			}
 			resp, err := workflow.Process(request)
 			if err != nil {

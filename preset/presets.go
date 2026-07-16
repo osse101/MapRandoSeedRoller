@@ -27,6 +27,7 @@ var TemplateMap = map[string]string{
 	"metroids":     "Winter_Tournament_-_Metroid_Objectives.json",
 	"noobjectives": "Winter_Tournament_-_No_Objectives.json",
 	"vmove":        "Winter_Tournament_-_Varia_+_Movement.json",
+	"ammo-balance": "Ammo Balanced Tournament.json",
 }
 
 //go:embed data/*.json
