@@ -10,6 +10,19 @@ import (
 	"maprandoseedroller/preset"
 )
 
+var skillPresetValues = valueSet(models.SkillPresetAliases)
+var objectivePresetValues = valueSet(models.ObjectivePresetAliases)
+
+// valueSet builds a membership set from an alias table's long-form values,
+// so a matched token ID can be tested without a linear scan.
+func valueSet(m map[string]string) map[string]bool {
+	s := make(map[string]bool, len(m))
+	for _, v := range m {
+		s[v] = true
+	}
+	return s
+}
+
 // Hydrate converts tokens into preset overrides and applies them onto the template.
 // Returns the merged preset as JSON bytes ready for the MapRando API.
 func Hydrate(template map[string]interface{}, tokens []models.Token) ([]byte, bool, error) {
@@ -67,13 +80,24 @@ func tokensToPresetFields(tokens []models.Token) (models.PresetFields, error) {
 			continue
 		}
 
+		// Skill presets are unique across every alias table, so they're
+		// recognized standalone by value, regardless of any sticky flag.
+		if skillPresetValues[tok.ID] {
+			f.SkillPreset = tok.ID
+			continue
+		}
+
 		// Route value tokens by their flag
 		switch tok.Flag {
 		case 'o':
-			f.ObjectiveOptions = append(f.ObjectiveOptions, models.ObjectiveOption{
-				Objective: tok.ID,
-				Setting:   tok.Value,
-			})
+			if objectivePresetValues[tok.ID] {
+				f.ObjectivePreset = tok.ID
+			} else {
+				f.ObjectiveOptions = append(f.ObjectiveOptions, models.ObjectiveOption{
+					Objective: tok.ID,
+					Setting:   tok.Value,
+				})
+			}
 		case 's':
 			count := 1
 			if tok.RawValue != "" {
@@ -137,6 +161,15 @@ func applyPresetFields(m map[string]interface{}, f models.PresetFields) error {
 	if len(f.ObjectiveOptions) > 0 {
 		mergeObjectiveOptions(m, f.ObjectiveOptions)
 		SetNestedValue(m, "objective_settings.preset", nil)
+	}
+
+	// --- Named presets (win over the nil-outs above: an explicit preset
+	// selection takes priority over sibling overrides in the same command) ---
+	if f.SkillPreset != "" {
+		SetNestedValue(m, "skill_assumption_settings.preset", f.SkillPreset)
+	}
+	if f.ObjectivePreset != "" {
+		SetNestedValue(m, "objective_settings.preset", f.ObjectivePreset)
 	}
 
 	return nil

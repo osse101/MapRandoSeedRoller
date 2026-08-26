@@ -3,10 +3,12 @@ package models
 type PresetFields struct {
 	// Direct Flags
 	Version          int               `path:"version"`
+	SkillPreset      string            `path:"skill_assumption_settings.preset"`
 	EscapeMultiplier float64           `path:"skill_assumption_settings.escape_timer_multiplier"`
 	StartingItems    []StartingItem    `path:"item_progression_settings.starting_items"` // starting_items: [{item,count}]
-	ObjectiveOptions []ObjectiveOption `path:"objective_settings.objective_options"`     // objective_options: [{objective, setting}]
-	MinObjectives    int               `path:"objective_settings.min_objectives"`        // TODO: Check number of set objectives is within bounds
+	ObjectivePreset  string            `path:"objective_settings.preset"`
+	ObjectiveOptions []ObjectiveOption `path:"objective_settings.objective_options"` // objective_options: [{objective, setting}]
+	MinObjectives    int               `path:"objective_settings.min_objectives"`    // TODO: Check number of set objectives is within bounds
 	MaxObjectives    int               `path:"objective_settings.max_objectives"`
 	MapLayout        string            `path:"map_layout"`
 	SaveAnimals      TriState          `path:"save_animals"`
@@ -17,10 +19,8 @@ type PresetFields struct {
 
 	// Indirect/Resultant Fields
 	Name                 string `path:"name"`
-	SkillPreset          string `path:"skill_assumption_settings.preset"`
 	StartingPreset       string `path:"item_progression_settings.starting_items_preset"`
 	QualityOfLifePreset  string `path:"quality_of_life_settings.preset"`
-	ObjectivePreset      string `path:"objective_settings.preset"`
 	DoorPreset           string `path:"doors_settings.preset"`
 	AreaAssignmentPreset string `path:"other_settings.area_assignment.preset"`
 }
@@ -52,14 +52,24 @@ var ObjectiveAliases = map[string]string{
 	"bt":      "BombTorizo",
 	"bowling": "BowlingStatue",
 	"acid":    "AcidChozoStatue",
-	"pit":     "PitRoom",
-	"babyk":   "BabyKraidRoom",
-	"plasma":  "PlasmaRoom",
-	"metal":   "MetalPiratesRoom",
+	"ppit":    "PitRoom",
+	"pkraid":  "BabyKraidRoom",
+	"pplasma": "PlasmaRoom",
+	"pmetal":  "MetalPiratesRoom",
 	"m1":      "MetroidRoom1",
 	"m2":      "MetroidRoom2",
 	"m3":      "MetroidRoom3",
 	"m4":      "MetroidRoom4",
+}
+
+var ObjectivePresetAliases = map[string]string{
+	"none":       "None",
+	"bosses":     "Bosses",
+	"minibosses": "Minibosses",
+	"chozos":     "Chozos",
+	"pirates":    "Pirates",
+	"metroids":   "Metroids",
+	"random":     "Random",
 }
 
 var ItemAliases = map[string]string{
@@ -100,8 +110,22 @@ var FlagAliases = map[string]string{
 
 var LayoutAliases = map[string]string{
 	"small":    "Small",
-	"tame":		"Tame",
+	"tame":     "Tame",
 	"wild":     "Wild",
 	"standard": "Standard",
 	"vanilla":  "Vanilla",
+}
+
+var SkillPresetAliases = map[string]string{
+	"basic":    "Basic",
+	"medium":   "Medium",
+	"hard":     "Hard",
+	"veryhard": "Very Hard",
+	"expert":   "Expert",
+	"expert+":  "Expert+",
+	"extreme":  "Extreme",
+	"extreme+": "Extreme+",
+	"insane":   "Insane",
+	"insane+":  "Insane+",
+	"beyond":   "Beyond",
 }

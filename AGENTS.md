@@ -183,10 +183,6 @@ Recorded deliberately — these are **not** fixed. Verified against the tree at 
   `SeedData` — a round-trip a typed `Data` would remove.
 
 **Preset customization**
-- `plasma` is ambiguous across alias tables: `ObjectiveAliases["plasma"] = "PlasmaRoom"` is
-  shadowed by `ItemAliases["plasma"] = "Plasma"` because `MergeAndSortAliases`
-  (`lib/helpers.go:22`) flattens all tables into one namespace, last-write-wins. `O:PLASMA`
-  therefore sets nothing. Fixing it needs flag-aware alias resolution, not a table edit.
 - `PresetFields` declares `SaveAnimals`, `WallJump`, `FreeShinesparks`, `SplitSpeed`,
   `MinObjectives`, `MaxObjectives` and `applyPresetFields` honors most of them, but no flag
   alias populates them — they are reachable only by extending the alias tables.

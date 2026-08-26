@@ -13,6 +13,8 @@ func TestLex(t *testing.T) {
 		models.ObjectiveAliases,
 		models.ItemAliases,
 		models.FlagAliases,
+		models.SkillPresetAliases,
+		models.ObjectivePresetAliases,
 	)
 	tests := []struct {
 		name    string
@@ -107,6 +109,32 @@ func TestLex(t *testing.T) {
 				{Flag: 'o', ID: "Phantoon", Value: models.False},
 				{Flag: 'o', ID: "Draygon", Value: models.True},
 				{Flag: 'o', ID: "Ridley", Value: models.False},
+			},
+			wantErr: false,
+		},
+		{
+			name:  "Skill preset standalone, no flag needed",
+			input: "expert",
+			wantOut: []models.Token{
+				{Flag: rune(-1), ID: "Expert", Value: models.False},
+			},
+			wantErr: false,
+		},
+		{
+			name:  "Skill preset with + suffix takes priority over base word",
+			input: "EXPERT+",
+			wantOut: []models.Token{
+				{Flag: rune(-1), ID: "Expert+", Value: models.True},
+			},
+			wantErr: false,
+		},
+		{
+			name:  "Objective preset shares the o flag with objective toggles",
+			input: "o:bossesKRAID",
+			wantOut: []models.Token{
+				{Flag: 'o', ID: "objective_options", Value: models.False},
+				{Flag: 'o', ID: "Bosses", Value: models.False},
+				{Flag: 'o', ID: "Kraid", Value: models.True},
 			},
 			wantErr: false,
 		},

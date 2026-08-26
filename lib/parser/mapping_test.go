@@ -26,6 +26,42 @@ func TestHydrate(t *testing.T) {
 			golden:  "simple_case.json",
 			wantErr: false,
 		},
+		{
+			name: "Skill Preset",
+			tokens: []models.Token{
+				{Flag: rune(-1), ID: "Expert", Value: models.False},
+			},
+			golden:  "skill_preset_case.json",
+			wantErr: false,
+		},
+		{
+			name: "Objective Preset",
+			tokens: []models.Token{
+				{Flag: 'o', ID: "objective_options", Value: models.False},
+				{Flag: 'o', ID: "Chozos", Value: models.False},
+			},
+			golden:  "objective_preset_case.json",
+			wantErr: false,
+		},
+		{
+			name: "Skill preset wins over escape multiplier nil-out",
+			tokens: []models.Token{
+				{Flag: 'x', ID: "escape_timer_multiplier", Value: models.True, RawValue: "1.5"},
+				{Flag: rune(-1), ID: "Expert", Value: models.False},
+			},
+			golden:  "skill_preset_priority_case.json",
+			wantErr: false,
+		},
+		{
+			name: "Objective preset wins over objective options nil-out",
+			tokens: []models.Token{
+				{Flag: 'o', ID: "objective_options", Value: models.False},
+				{Flag: 'o', ID: "Kraid", Value: models.True},
+				{Flag: 'o', ID: "Metroids", Value: models.False},
+			},
+			golden:  "objective_preset_priority_case.json",
+			wantErr: false,
+		},
 	}
 
 	for _, tt := range tests {

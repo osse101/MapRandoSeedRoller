@@ -34,6 +34,8 @@ func PrepareGameData(data string) ([]byte, bool, interface{}, error) {
 		models.ItemAliases,
 		models.FlagAliases,
 		models.LayoutAliases,
+		models.SkillPresetAliases,
+		models.ObjectivePresetAliases,
 	)
 	validPresets := preset.GetPresetNames()
 
