@@ -48,7 +48,9 @@ A bot and API for rolling randomizer seeds, with support for presets, overrides,
 | `draft`        | Hard       | Tricky    | Same as s4; starting items set via args                      |
 | `metroids`     | Hard       | Tricky    | Metroid objectives, no Mother Brain 2; rest is s4            |
 | `noobjectives` | Hard       | Tricky    | No objectives; rest is s4                                    |
-| `vmode`        | Hard       | Tricky    | Starting Varia, Grapple, HiJump, Ice, Springball; rest is s4 |
+| `vmove`        | Hard       | Tricky    | Starting Varia, Grapple, HiJump, Ice, Springball; rest is s4 |
+| `ammo-balance` | Hard       | Tricky    | Ammo-balanced tournament settings                            |
+| `nis`          | Very Hard  | Challenge | NIS Very Hard Challenge                                      |
 
 ---
 
@@ -86,7 +88,7 @@ kraid, phan, dray, ridley, spore, croc, bot, gt, bt, bowling, acid, pit, babyk, 
 **Starting Items**
 
 ```
-missile, etank, rtank, super, pb, charge, ice, wave, spazer, plasma, xray, morph, bomb, grapple, hjb, speed, spring, space, screw, varia, gravity
+missile, etank, rtank, super, pb, charge, ice, wave, spazer, plasma, xray, morph, bomb, grapple, hjb, speed, spring, space, screw, varia, gravity, wj, blue, spark
 ```
 
 **Map Layouts**

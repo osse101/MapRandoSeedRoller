@@ -1,7 +1,16 @@
+# Tooling & local config
 .golangci.yml
 Makefile
-**/*_test.go
-README.md
+.gitignore
+.vercel
+.github
 tools/*
-testdata/*
+
+# Docs & agent context
+**/*.md
+.claude/
 todo.txt
+
+# Tests & fixtures
+**/*_test.go
+testdata/*

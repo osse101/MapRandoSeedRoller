@@ -28,6 +28,7 @@ var TemplateMap = map[string]string{
 	"noobjectives": "Winter_Tournament_-_No_Objectives.json",
 	"vmove":        "Winter_Tournament_-_Varia_+_Movement.json",
 	"ammo-balance": "Ammo Balanced Tournament.json",
+	"nis":          "NIS_Very_Hard_Challenge.json",
 }
 
 //go:embed data/*.json

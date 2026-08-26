@@ -2,6 +2,10 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "rewrites": [
         {
+            "source": "/inertia_roll",
+            "destination": "/api/inertia_roll"
+        },
+        {
             "source": "/secure_roll",
             "destination": "/api/secure_roll"
         },

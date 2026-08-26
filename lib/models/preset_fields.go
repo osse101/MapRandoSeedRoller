@@ -57,9 +57,9 @@ var ObjectiveAliases = map[string]string{
 	"plasma":  "PlasmaRoom",
 	"metal":   "MetalPiratesRoom",
 	"m1":      "MetroidRoom1",
-	"m2":      "MetroidsRoom2",
-	"m3":      "MetroidsRoom3",
-	"m4":      "MetrpodsRoom4",
+	"m2":      "MetroidRoom2",
+	"m3":      "MetroidRoom3",
+	"m4":      "MetroidRoom4",
 }
 
 var ItemAliases = map[string]string{
@@ -84,6 +84,9 @@ var ItemAliases = map[string]string{
 	"screw":   "ScrewAttack",
 	"varia":   "Varia",
 	"gravity": "Gravity",
+	"wj":      "WallJump",
+	"blue":    "BlueBooster",
+	"spark":   "SparkBooster",
 }
 
 var FlagAliases = map[string]string{
@@ -96,7 +99,8 @@ var FlagAliases = map[string]string{
 }
 
 var LayoutAliases = map[string]string{
-	"tame":     "Tame",
+	"small":    "Small",
+	"tame":		"Tame",
 	"wild":     "Wild",
 	"standard": "Standard",
 	"vanilla":  "Vanilla",
