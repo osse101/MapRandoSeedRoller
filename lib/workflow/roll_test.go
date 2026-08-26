@@ -29,7 +29,7 @@ func TestPrepareGameData(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _, err := PrepareGameData(tt.data)
+			got, _, _, err := PrepareGameData(tt.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("PrepareGameData() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -26,6 +26,15 @@ type SeedData struct {
 	SeedHash string `json:"seed_hash"`
 }
 
+type RollResponseData struct {
+	SeedData
+	Extra interface{} `json:"extra,omitempty"`
+}
+
+type SpriteExtra struct {
+	SpriteName string `json:"sprite_name"`
+}
+
 type RequestMapRando struct {
 	// The "settings" field is actually a file (settings.json)
 	Settings     []byte `form:"settings" filename:"settings.json" content-type:"text/plain"`

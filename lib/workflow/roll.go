@@ -12,22 +12,22 @@ import (
 	"maprandoseedroller/preset"
 )
 
-func ExecuteRoll(data string) (models.SeedData, error) {
-	gameData, isDev, err := PrepareGameData(data)
+func ExecuteRoll(data string) (models.RollResponseData, error) {
+	gameData, isDev, extra, err := PrepareGameData(data)
 	if err != nil {
-		return models.SeedData{}, err
+		return models.RollResponseData{}, err
 	}
 
 	//Send to MapRando
 	resp, err := randomize.Randomize(gameData, isDev)
 	if err != nil {
-		return models.SeedData{}, err
+		return models.RollResponseData{}, err
 	}
 
-	return resp, nil
+	return models.RollResponseData{SeedData: resp, Extra: extra}, nil
 }
 
-func PrepareGameData(data string) ([]byte, bool, error) {
+func PrepareGameData(data string) ([]byte, bool, interface{}, error) {
 	//Get Keywords
 	flagTable := lib.MergeAndSortAliases(
 		models.ObjectiveAliases,
@@ -53,19 +53,34 @@ func PrepareGameData(data string) ([]byte, bool, error) {
 	}
 
 	if !slices.Contains(validPresets, selectedPreset) {
-		return nil, false, fmt.Errorf("invalid preset selected")
+		return nil, false, nil, fmt.Errorf("invalid preset selected")
 	}
 
 	// Parse Flags
 	tokens, err := parser.Lex(flags, flagTable)
 	if err != nil {
-		return nil, false, err
+		return nil, false, nil, err
 	}
 
 	//Write json preset
 	tmpl, err := preset.LoadTemplate(selectedPreset)
 	if err != nil {
-		return nil, false, err
+		return nil, false, nil, err
 	}
-	return parser.Hydrate(tmpl, tokens)
+
+	// Run any preset-specific custom action before hydration, so user flags
+	// still apply on top of whatever the action mutates.
+	var extra interface{}
+	if action, ok := PresetActions[strings.ToLower(selectedPreset)]; ok {
+		extra, err = action(tmpl)
+		if err != nil {
+			return nil, false, nil, err
+		}
+	}
+
+	gameData, isDev, err := parser.Hydrate(tmpl, tokens)
+	if err != nil {
+		return nil, false, nil, err
+	}
+	return gameData, isDev, extra, nil
 }
