@@ -50,7 +50,7 @@ A bot and API for rolling randomizer seeds, with support for presets, overrides,
 | `noobjectives` | Hard       | Tricky    | No objectives; rest is s4                                    |
 | `vmove`        | Hard       | Tricky    | Starting Varia, Grapple, HiJump, Ice, Springball; rest is s4 |
 | `ammo-balance` | Hard       | Tricky    | Ammo-balanced tournament settings                            |
-| `nis`          | Very Hard  | Challenge | NIS Very Hard Challenge                                      |
+| `nis`          | Very Hard  | Random    | NIS Very Hard, randomly selected difficulty and sprite       |
 
 ---
 
@@ -139,10 +139,19 @@ A string specifying seed rolling parameters, such as the preset and field overri
 
 **Response `data`**
 
-| Field       | Type   | Description                        |
-| ----------- | ------ | ---------------------------------- |
-| `seed_url`  | string | The URL of the generated seed      |
-| `seed_hash` | string | The in-game hash code for the seed |
+| Field       | Type   | Description                                                        |
+| ----------- | ------ | ------------------------------------------------------------------ |
+| `seed_url`  | string | The URL of the generated seed                                      |
+| `seed_hash` | string | The in-game hash code for the seed                                 |
+| `extra`     | object | Optional, preset-specific extra data (see below); omitted if none  |
+
+Some presets run custom logic on top of the normal roll flow and attach an `extra`
+payload whose shape depends on the preset. Callers should only interpret `extra` when
+they recognize the preset that was rolled.
+
+| Preset | `extra` shape               | Notes                                                                          |
+| ------ | --------------------------- | ------------------------------------------------------------------------------ |
+| `nis`  | `{ "sprite_name": string }` | Also randomizes the item progression difficulty (Technical/Challenge/Desolate) |
 
 **Example**
 
@@ -160,6 +169,29 @@ A string specifying seed rolling parameters, such as the preset and field overri
   "data": {
     "seed_url": "https://maprando.com/seed/tc2pHBSZc/",
     "seed_hash": "YARD YARD YARD YARD"
+  }
+}
+```
+
+**Example (preset with `extra` data)**
+
+```json
+// Request
+{
+  "action": "roll",
+  "source": "racetime",
+  "data": "nis"
+}
+
+// Response
+{
+  "status": "success",
+  "data": {
+    "seed_url": "https://maprando.com/seed/6jZq6Jxcg/",
+    "seed_hash": "OWTCH ZEBBO TATORI EVIR",
+    "extra": {
+      "sprite_name": "Dread Samus"
+    }
   }
 }
 ```

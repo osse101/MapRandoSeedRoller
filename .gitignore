@@ -1,2 +1,35 @@
+# Vercel
 .vercel
+
+# Local notes
 todo.txt
+
+# Go build artifacts
+/bin/
+*.exe
+*.exe~
+*.test
+*.out
+*.prof
+coverage.txt
+coverage.html
+
+# Go tooling caches
+tools/bin/
+
+# Node (vercel CLI writes these when running `vercel dev` locally — not project files)
+node_modules/
+package.json
+package-lock.json
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
