@@ -54,7 +54,9 @@ func PrepareGameData(data string) ([]byte, bool, interface{}, error) {
 		}
 	}
 
-	if !slices.Contains(validPresets, selectedPreset) {
+	action, hasAction := PresetActions[strings.ToLower(selectedPreset)]
+	isRealPreset := slices.Contains(validPresets, selectedPreset)
+	if !isRealPreset && !hasAction {
 		return nil, false, nil, fmt.Errorf("invalid preset selected")
 	}
 
@@ -64,19 +66,29 @@ func PrepareGameData(data string) ([]byte, bool, interface{}, error) {
 		return nil, false, nil, err
 	}
 
-	//Write json preset
-	tmpl, err := preset.LoadTemplate(selectedPreset)
-	if err != nil {
-		return nil, false, nil, err
+	// Write json preset. Meta/action-only presets (e.g. "drockyrandom") have
+	// no template of their own — the action below is responsible for
+	// selecting and loading one into tmpl.
+	var tmpl map[string]interface{}
+	if isRealPreset {
+		tmpl, err = preset.LoadTemplate(selectedPreset)
+		if err != nil {
+			return nil, false, nil, err
+		}
+	} else {
+		tmpl = map[string]interface{}{}
 	}
 
 	// Run any preset-specific custom action before hydration, so user flags
 	// still apply on top of whatever the action mutates.
 	var extra interface{}
-	if action, ok := PresetActions[strings.ToLower(selectedPreset)]; ok {
+	if hasAction {
 		extra, err = action(tmpl)
 		if err != nil {
 			return nil, false, nil, err
+		}
+		if !isRealPreset && len(tmpl) == 0 {
+			return nil, false, nil, fmt.Errorf("preset action %q did not select a template", selectedPreset)
 		}
 	}
 

@@ -35,6 +35,16 @@ type SpriteExtra struct {
 	SpriteName string `json:"sprite_name"`
 }
 
+// PresetSelectionExtra describes a meta preset action's random pick — which
+// preset/variation was selected, any starting items chosen for it, and (when
+// the pick chains into that preset's own action, e.g. randompreset landing
+// on nis) that action's own Extra payload nested underneath.
+type PresetSelectionExtra struct {
+	SelectedPreset string      `json:"selected_preset"`
+	StartingItems  []string    `json:"starting_items,omitempty"`
+	Extra          interface{} `json:"extra,omitempty"`
+}
+
 type RequestMapRando struct {
 	// The "settings" field is actually a file (settings.json)
 	Settings     []byte `form:"settings" filename:"settings.json" content-type:"text/plain"`
