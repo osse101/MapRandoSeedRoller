@@ -12,6 +12,7 @@ import (
 
 var skillPresetValues = valueSet(models.SkillPresetAliases)
 var objectivePresetValues = valueSet(models.ObjectivePresetAliases)
+var progressionPresetValues = valueSet(models.ProgressionPresetAliases)
 
 // valueSet builds a membership set from an alias table's long-form values,
 // so a matched token ID can be tested without a linear scan.
@@ -87,6 +88,12 @@ func tokensToPresetFields(tokens []models.Token) (models.PresetFields, error) {
 			continue
 		}
 
+		// Progression presets are likewise unique across every alias table.
+		if progressionPresetValues[tok.ID] {
+			f.ProgressionPreset = tok.ID
+			continue
+		}
+
 		// Route value tokens by their flag
 		switch tok.Flag {
 		case 'o':
@@ -155,6 +162,11 @@ func applyPresetFields(m map[string]interface{}, f models.PresetFields) error {
 	if len(f.StartingItems) > 0 {
 		mergeStartingItems(m, f.StartingItems)
 		SetNestedValue(m, "item_progression_settings.starting_items_preset", nil)
+		SetNestedValue(m, "item_progression_settings.preset", nil)
+	}
+	if f.StartingPreset != "" {
+		SetNestedValue(m, "item_progression_settings.starting_items_preset", f.StartingPreset)
+		SetNestedValue(m, "item_progression_settings.preset", nil)
 	}
 
 	// --- Objective Options (merge into template array) ---
@@ -170,6 +182,9 @@ func applyPresetFields(m map[string]interface{}, f models.PresetFields) error {
 	}
 	if f.ObjectivePreset != "" {
 		SetNestedValue(m, "objective_settings.preset", f.ObjectivePreset)
+	}
+	if f.ProgressionPreset != "" {
+		SetNestedValue(m, "item_progression_settings.preset", f.ProgressionPreset)
 	}
 
 	return nil

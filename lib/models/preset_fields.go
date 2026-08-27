@@ -2,20 +2,21 @@ package models
 
 type PresetFields struct {
 	// Direct Flags
-	Version          int               `path:"version"`
-	SkillPreset      string            `path:"skill_assumption_settings.preset"`
-	EscapeMultiplier float64           `path:"skill_assumption_settings.escape_timer_multiplier"`
-	StartingItems    []StartingItem    `path:"item_progression_settings.starting_items"` // starting_items: [{item,count}]
-	ObjectivePreset  string            `path:"objective_settings.preset"`
-	ObjectiveOptions []ObjectiveOption `path:"objective_settings.objective_options"` // objective_options: [{objective, setting}]
-	MinObjectives    int               `path:"objective_settings.min_objectives"`    // TODO: Check number of set objectives is within bounds
-	MaxObjectives    int               `path:"objective_settings.max_objectives"`
-	MapLayout        string            `path:"map_layout"`
-	SaveAnimals      TriState          `path:"save_animals"`
-	WallJump         string            `path:"other_settings.wall_jump"`
-	FreeShinesparks  bool              `path:"other_settings.energy_free_shinesparks"`
-	SplitSpeed       string            `path:"other_settings.speed_booster"`
-	IsRace           bool              `path:"other_settings.race_mode"`
+	Version           int               `path:"version"`
+	SkillPreset       string            `path:"skill_assumption_settings.preset"`
+	EscapeMultiplier  float64           `path:"skill_assumption_settings.escape_timer_multiplier"`
+	ProgressionPreset string            `path:"item_progression_settings.preset"`
+	StartingItems     []StartingItem    `path:"item_progression_settings.starting_items"` // starting_items: [{item,count}]
+	ObjectivePreset   string            `path:"objective_settings.preset"`
+	ObjectiveOptions  []ObjectiveOption `path:"objective_settings.objective_options"` // objective_options: [{objective, setting}]
+	MinObjectives     int               `path:"objective_settings.min_objectives"`    // TODO: Check number of set objectives is within bounds
+	MaxObjectives     int               `path:"objective_settings.max_objectives"`
+	MapLayout         string            `path:"map_layout"`
+	SaveAnimals       TriState          `path:"save_animals"`
+	WallJump          string            `path:"other_settings.wall_jump"`
+	FreeShinesparks   bool              `path:"other_settings.energy_free_shinesparks"`
+	SplitSpeed        string            `path:"other_settings.speed_booster"`
+	IsRace            bool              `path:"other_settings.race_mode"`
 
 	// Indirect/Resultant Fields
 	Name                 string `path:"name"`
@@ -128,4 +129,12 @@ var SkillPresetAliases = map[string]string{
 	"insane":   "Insane",
 	"insane+":  "Insane+",
 	"beyond":   "Beyond",
+}
+
+var ProgressionPresetAliases = map[string]string{
+	"normal":    "Normal",
+	"tricky":    "Tricky",
+	"technical": "Technical",
+	"challenge": "Challenge",
+	"desolate":  "Desolate",
 }

@@ -35,6 +35,14 @@ func TestHydrate(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "Progression Preset",
+			tokens: []models.Token{
+				{Flag: rune(-1), ID: "Technical", Value: models.False},
+			},
+			golden:  "progression_preset_case.json",
+			wantErr: false,
+		},
+		{
 			name: "Objective Preset",
 			tokens: []models.Token{
 				{Flag: 'o', ID: "objective_options", Value: models.False},
@@ -72,6 +80,37 @@ func TestHydrate(t *testing.T) {
 			require.JSONEq(t, string(want), string(got))
 		})
 	}
+}
+
+func TestHydrate_StartingItemsClearsProgressionPreset(t *testing.T) {
+	tmpl := freshTemplate(t, loadTemplate(t))
+	SetNestedValue(tmpl, "item_progression_settings.preset", "Normal")
+
+	tokens := []models.Token{
+		{Flag: 's', ID: "starting_items", Value: models.False},
+		{Flag: 's', ID: "Morph", Value: models.True},
+	}
+
+	got, _, err := Hydrate(tmpl, tokens)
+	require.NoError(t, err)
+
+	var result map[string]interface{}
+	require.NoError(t, json.Unmarshal(got, &result))
+
+	ips := result["item_progression_settings"].(map[string]interface{})
+	require.Nil(t, ips["preset"])
+}
+
+func TestApplyPresetFields_StartingPresetClearsProgressionPreset(t *testing.T) {
+	tmpl := freshTemplate(t, loadTemplate(t))
+	SetNestedValue(tmpl, "item_progression_settings.preset", "Normal")
+
+	fields := models.PresetFields{StartingPreset: "Random"}
+	require.NoError(t, applyPresetFields(tmpl, fields))
+
+	ips := tmpl["item_progression_settings"].(map[string]interface{})
+	require.Equal(t, "Random", ips["starting_items_preset"])
+	require.Nil(t, ips["preset"])
 }
 
 func loadTemplate(t *testing.T) []byte {
