@@ -163,6 +163,7 @@ func applyPresetFields(m map[string]interface{}, f models.PresetFields) error {
 		mergeStartingItems(m, f.StartingItems)
 		SetNestedValue(m, "item_progression_settings.starting_items_preset", nil)
 		SetNestedValue(m, "item_progression_settings.preset", nil)
+		applyStartingItemSideEffects(m, f)
 	}
 	if f.StartingPreset != "" {
 		SetNestedValue(m, "item_progression_settings.starting_items_preset", f.StartingPreset)
@@ -188,6 +189,26 @@ func applyPresetFields(m map[string]interface{}, f models.PresetFields) error {
 	}
 
 	return nil
+}
+
+// applyStartingItemSideEffects sets the settings that starting with certain
+// movement items implies: Wall Jump must be collectible if it isn't already
+// on the player, and either speed booster color requires the ability to
+// split the beam from the run, so its setting must be split as well.
+// Explicit flags for these settings take priority if present.
+func applyStartingItemSideEffects(m map[string]interface{}, f models.PresetFields) {
+	for _, si := range f.StartingItems {
+		switch si.Item {
+		case "WallJump":
+			if f.WallJump == "" {
+				SetNestedValue(m, "other_settings.wall_jump", "Collectible")
+			}
+		case "BlueBooster", "SparkBooster":
+			if f.SplitSpeed == "" {
+				SetNestedValue(m, "other_settings.speed_booster", "Split")
+			}
+		}
+	}
 }
 
 // mergeStartingItems updates matching entries in the template's starting_items array.

@@ -101,6 +101,42 @@ func TestHydrate_StartingItemsClearsProgressionPreset(t *testing.T) {
 	require.Nil(t, ips["preset"])
 }
 
+func TestHydrate_StartingWallJumpMakesItCollectible(t *testing.T) {
+	tokens := []models.Token{
+		{Flag: 's', ID: "starting_items", Value: models.False},
+		{Flag: 's', ID: "WallJump", Value: models.True},
+	}
+
+	got, _, err := Hydrate(freshTemplate(t, loadTemplate(t)), tokens)
+	require.NoError(t, err)
+
+	var result map[string]interface{}
+	require.NoError(t, json.Unmarshal(got, &result))
+
+	os := result["other_settings"].(map[string]interface{})
+	require.Equal(t, "Collectible", os["wall_jump"])
+}
+
+func TestHydrate_StartingBoosterColorSplitsSpeedBooster(t *testing.T) {
+	for _, item := range []string{"BlueBooster", "SparkBooster"} {
+		t.Run(item, func(t *testing.T) {
+			tokens := []models.Token{
+				{Flag: 's', ID: "starting_items", Value: models.False},
+				{Flag: 's', ID: item, Value: models.True},
+			}
+
+			got, _, err := Hydrate(freshTemplate(t, loadTemplate(t)), tokens)
+			require.NoError(t, err)
+
+			var result map[string]interface{}
+			require.NoError(t, json.Unmarshal(got, &result))
+
+			os := result["other_settings"].(map[string]interface{})
+			require.Equal(t, "Split", os["speed_booster"])
+		})
+	}
+}
+
 func TestApplyPresetFields_StartingPresetClearsProgressionPreset(t *testing.T) {
 	tmpl := freshTemplate(t, loadTemplate(t))
 	SetNestedValue(tmpl, "item_progression_settings.preset", "Normal")
