@@ -42,6 +42,14 @@ linters-settings:
 issues:
   exclude-files:
     - "lib/parser/mapping.go"
+  exclude-rules:
+    # math/rand is used here only for cosmetic randomization (sprite/preset
+    # selection), not anything security-sensitive, so gosec's weak-RNG
+    # warning (G404) doesn't apply.
+    - path: "lib/workflow/preset_actions.go"
+      linters:
+        - gosec
+      text: "G404"
 output:
   formats:
     - format: colored-line-number
