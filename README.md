@@ -50,7 +50,10 @@ A bot and API for rolling randomizer seeds, with support for presets, overrides,
 | `noobjectives` | Hard       | Tricky    | No objectives; rest is s4                                    |
 | `vmove`        | Hard       | Tricky    | Starting Varia, Grapple, HiJump, Ice, Springball; rest is s4 |
 | `ammo-balance` | Hard       | Tricky    | Ammo-balanced tournament settings                            |
-| `nis`          | Very Hard  | Random    | NIS Very Hard, randomly selected difficulty and sprite       |
+| `nis`          | Very Hard  | Random    | Randomly selected item placement and sprite                  |
+| `drockyrandom` | Hard       | Tricky    | Randomly selected starting items and objectives from a list  |
+| `mentorrandom` | Medium     | Normal    | Randomly selected objectives or item draft                   |
+| `randompreset` | Random     | Random    | Random across all existing presets                           |
 
 ---
 
@@ -79,10 +82,16 @@ Overrides are passed as flags after the preset name. Letter case controls the ov
 
 ### Override Values Reference
 
+**Skill Assumptions**
+
+```
+basic, medium, hard, veryhard, expert, expert+, extreme, extreme+, insane, insane+
+```
+
 **Objectives**
 
 ```
-kraid, phan, dray, ridley, spore, croc, bot, gt, bt, bowling, acid, pit, babyk, plasma, metal, m1, m2, m3, m4
+kraid, phan, dray, ridley, spore, croc, bot, gt, bt, bowling, acid, ppit, pkraid, pplasma, pmetal, m1, m2, m3, m4, none, bosses, minibosses, pirates, chozos, metroids, random
 ```
 
 **Starting Items**
