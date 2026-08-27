@@ -14,6 +14,21 @@ import (
 	"maprandoseedroller/lib/models"
 )
 
+// HTTPClient is used for all requests to the MapRando backend. Tests may
+// swap it for a client with a fake Transport to avoid real network calls.
+var HTTPClient = &http.Client{}
+
+// UpstreamError indicates the failure occurred talking to the MapRando
+// backend (transport failure, non-200 response, or an unparsable response
+// body) rather than being caused by invalid caller input. api/roll.go uses
+// errors.As to map this to 502 instead of 400.
+type UpstreamError struct {
+	Err error
+}
+
+func (e *UpstreamError) Error() string { return e.Err.Error() }
+func (e *UpstreamError) Unwrap() error { return e.Err }
+
 func MakeRequest(baseURL string, settings models.RequestMapRando) (models.SeedData, error) {
 	body, contentType, err := buildMultipartRequest(settings)
 	if err != nil {
@@ -27,22 +42,21 @@ func MakeRequest(baseURL string, settings models.RequestMapRando) (models.SeedDa
 	}
 	req.Header.Set("Content-Type", contentType)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := HTTPClient.Do(req)
 	if err != nil {
 		slog.Error("HTTP request failed", slog.Any("error", err))
-		return models.SeedData{}, err
+		return models.SeedData{}, &UpstreamError{Err: err}
 	}
 	slog.Info("Response received", slog.String("status", resp.Status))
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return models.SeedData{}, fmt.Errorf("unexpected status: %s", resp.Status)
+		return models.SeedData{}, &UpstreamError{Err: fmt.Errorf("unexpected status: %s", resp.Status)}
 	}
 
 	var result models.ResponseMapRando
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return models.SeedData{}, fmt.Errorf("failed to decode response JSON: %w", err)
+		return models.SeedData{}, &UpstreamError{Err: fmt.Errorf("failed to decode response JSON: %w", err)}
 	}
 
 	seedURL := result.SeedURL

@@ -9,6 +9,7 @@ import (
 
 	svix "github.com/svix/svix-webhooks/go"
 
+	"maprandoseedroller/lib/httpio"
 	"maprandoseedroller/lib/models"
 	"maprandoseedroller/lib/workflow"
 )
@@ -50,12 +51,12 @@ func InertiaWebhookHandler(w http.ResponseWriter, r *http.Request) {
 	// Delegate to manager
 	resp, err := workflow.Process(req)
 	if err != nil {
-		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
+		httpio.WriteJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
 			Status:  "error",
 			Message: err.Error(),
 		})
 		return
 	}
 
-	writeJSONResponse(w, http.StatusOK, resp)
+	httpio.WriteJSONResponse(w, http.StatusOK, resp)
 }

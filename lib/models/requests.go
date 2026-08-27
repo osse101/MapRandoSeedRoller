@@ -16,9 +16,10 @@ type ResponseOut struct {
 }
 
 type InertiaResponseOut struct {
-	URL     string `json:"url"`
-	Hash    string `json:"hash,omitempty"`
-	Message string `json:"message,omitempty"`
+	URL     string      `json:"url"`
+	Hash    string      `json:"hash,omitempty"`
+	Message string      `json:"message,omitempty"`
+	Extra   interface{} `json:"extra,omitempty"`
 }
 
 type SeedData struct {

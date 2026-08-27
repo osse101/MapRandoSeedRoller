@@ -18,8 +18,11 @@ adds an endpoint; there is no router and no `main`.
 | `api/secure_roll.go`  | `InertiaWebhookHandler`| Same payload, gated by Svix signature verification. |
 | `api/inertia_roll.go` | `InertiaHandler`       | GET only, gated on an exact `User-Agent` match.  |
 
-Shared helpers (`decode`, `writeJSONResponse`) live in `api/roll.go` and are used by the
-other handlers; they are all in `package api`.
+Shared helpers (`DecodeRequest`, `WriteJSONResponse`) live in `lib/httpio`, not in
+`api/roll.go` itself — `vercel dev`'s local Go builder compiles each `api/*.go` file in
+isolation (plus a generated entrypoint) and does not see unexported declarations from
+sibling files in the same package, so cross-handler helpers must be a real importable
+package, not same-directory unexported functions.
 
 ---
 
@@ -169,18 +172,8 @@ go build ./...
 
 Recorded deliberately — these are **not** fixed. Verified against the tree at the time of writing.
 
-**Response / dataflow (`api/roll` + `models.ResponseOut`)** — untouched, owned by the queued rework
-- `go test ./...` fails today: `api.TestRandomizeHandler` sends action `"test"` (rejected, 400)
-  and type-asserts the decoded response to `models.SeedData`, which can never succeed —
-  `encoding/json` decodes into `interface{}` as `map[string]interface{}`.
-- `lib/workflow/manager.go:28` and `:36` return `Status: "success"` alongside a non-nil error.
-  Handlers treat the error as authoritative and overwrite the body, so the status set at the
-  source is inconsistent with what ships.
+**Response / dataflow (`api/roll` + `models.ResponseOut`)**
 - `roll` never populates `ResponseOut.Message`, though the README documents one.
-- `api/roll.go` maps every workflow error to `400`, including upstream MapRando failures that
-  are not the caller's fault.
-- `api/inertia_roll.go:37-52` marshals `resp.Data` and unmarshals it straight back into
-  `SeedData` — a round-trip a typed `Data` would remove.
 
 **Preset customization**
 - `PresetFields` declares `SaveAnimals`, `WallJump`, `FreeShinesparks`, `SplitSpeed`,
@@ -196,6 +189,7 @@ Recorded deliberately — these are **not** fixed. Verified against the tree at 
 
 **Coverage** (also in the gitignored `todo.txt`)
 - `lib/randomize` has no tests — neither multipart construction nor response decoding.
+  `randomize.HTTPClient` (`lib/randomize/networking.go`) is now an exported package var
+  that can be swapped for a client with a fake `http.RoundTripper`, so this no longer
+  needs a new seam, just the tests themselves — see `api/api_test.go` for the pattern.
 - No tests for Svix signature verification in `api/secure_roll.go` (valid vs spoofed headers).
-- `RandomizeHandler` has no seam for injecting a fake MapRando backend, so any handler test
-  hits the network.

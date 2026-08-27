@@ -1,14 +1,16 @@
 package api
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 
+	"maprandoseedroller/lib/httpio"
 	// Initialize the global slog logger definition
 	_ "maprandoseedroller/lib/logger"
 	"maprandoseedroller/lib/models"
+	"maprandoseedroller/lib/randomize"
 	"maprandoseedroller/lib/workflow"
 )
 
@@ -18,7 +20,7 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req, err := decode(r)
+	req, err := httpio.DecodeRequest(r)
 	if err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
@@ -28,29 +30,17 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	// Delegate to manager
 	resp, err := workflow.Process(*req)
 	if err != nil {
-		writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
+		status := http.StatusBadRequest
+		var upstreamErr *randomize.UpstreamError
+		if errors.As(err, &upstreamErr) {
+			status = http.StatusBadGateway
+		}
+		httpio.WriteJSONResponse(w, status, models.ResponseOut{
 			Status:  "error",
 			Message: err.Error(),
 		})
 		return
 	}
 
-	writeJSONResponse(w, http.StatusOK, resp)
-}
-
-func decode(r *http.Request) (*models.RequestRaw, error) {
-	defer r.Body.Close()
-	var req models.RequestRaw
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		return nil, err
-	}
-	return &req, nil
-}
-
-func writeJSONResponse(w http.ResponseWriter, statusCode int, payload models.ResponseOut) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	if err := json.NewEncoder(w).Encode(payload); err != nil {
-		slog.Error("Failed to encode JSON response", slog.Any("error", err))
-	}
+	httpio.WriteJSONResponse(w, http.StatusOK, resp)
 }

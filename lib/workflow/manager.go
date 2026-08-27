@@ -25,15 +25,20 @@ func handleAction(req models.RequestRaw) (models.ResponseOut, error) {
 			return models.ResponseOut{Status: "error"}, fmt.Errorf("roll action requires string flags")
 		}
 		res, err := ExecuteRoll(flags)
-		return models.ResponseOut{Status: "success", Data: res}, err
+		if err != nil {
+			return models.ResponseOut{Status: "error"}, err
+		}
+		return models.ResponseOut{Status: "success", Data: res}, nil
 
 	case "unlock":
 		var url string
 		if err := json.Unmarshal(req.Data, &url); err != nil {
 			return models.ResponseOut{Status: "error"}, fmt.Errorf("unlock action requires a URL string")
 		}
-		err := ExecuteUnlock(url)
-		return models.ResponseOut{Status: "success"}, err
+		if err := ExecuteUnlock(url); err != nil {
+			return models.ResponseOut{Status: "error"}, err
+		}
+		return models.ResponseOut{Status: "success"}, nil
 
 	case "help":
 		msg := GetHelp(req.Source)

@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"maprandoseedroller/lib/httpio"
 	// Initialize the global slog logger definition
 	_ "maprandoseedroller/lib/logger"
 	"maprandoseedroller/lib/models"
@@ -27,34 +28,28 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			resp, err := workflow.Process(request)
 			if err != nil {
-				writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
+				httpio.WriteJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
 					Status:  "error",
 					Message: err.Error(),
 				})
 				return
 			}
-			//Convert to InertiaResponseOut
-			seedJSON, err := json.Marshal(resp.Data)
-			if err != nil {
-				writeJSONResponse(w, http.StatusInternalServerError, models.ResponseOut{
+
+			rollData, ok := resp.Data.(models.RollResponseData)
+			if !ok {
+				httpio.WriteJSONResponse(w, http.StatusInternalServerError, models.ResponseOut{
 					Status:  "error",
-					Message: "failed to marshal seed data",
+					Message: "unexpected response shape from roll action",
 				})
 				return
 			}
-			var seedData models.SeedData
-			if err := json.Unmarshal(seedJSON, &seedData); err != nil {
-				writeJSONResponse(w, http.StatusInternalServerError, models.ResponseOut{
-					Status:  "error",
-					Message: "failed to unmarshal seed data",
-				})
-				return
-			}
-			msg := fmt.Sprintf("Your seed is ready: %s | %s.", seedData.SeedURL, seedData.SeedHash)
+
+			msg := fmt.Sprintf("Your seed is ready: %s | %s.", rollData.SeedURL, rollData.SeedHash)
 			iResp := models.InertiaResponseOut{
-				URL:     seedData.SeedURL,
-				Hash:    seedData.SeedHash,
+				URL:     rollData.SeedURL,
+				Hash:    rollData.SeedHash,
 				Message: msg,
+				Extra:   rollData.Extra,
 			}
 
 			writeInertiaJSONResponse(w, http.StatusOK, iResp)
@@ -63,7 +58,7 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a preset name.")
 		return
 	}
-	writeJSONResponse(w, http.StatusBadRequest, models.ResponseOut{Message: "Bad User-Agent."})
+	httpio.WriteJSONResponse(w, http.StatusBadRequest, models.ResponseOut{Status: "error", Message: "Bad User-Agent."})
 }
 
 func writeInertiaJSONResponse(w http.ResponseWriter, statusCode int, payload models.InertiaResponseOut) {
