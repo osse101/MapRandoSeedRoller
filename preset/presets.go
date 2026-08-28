@@ -29,6 +29,7 @@ var TemplateMap = map[string]string{
 	"vmove":        "Winter_Tournament_-_Varia_+_Movement.json",
 	"ammo-balance": "Ammo Balanced Tournament.json",
 	"nis":          "NIS_Very_Hard_Challenge.json",
+	"dee":			"Hard_Tricky_No_Walljump_Hijump_Start.json",
 }
 
 //go:embed data/*.json

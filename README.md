@@ -94,6 +94,12 @@ basic, medium, hard, veryhard, expert, expert+, extreme, extreme+, insane, insan
 kraid, phan, dray, ridley, spore, croc, bot, gt, bt, bowling, acid, ppit, pkraid, pplasma, pmetal, m1, m2, m3, m4, none, bosses, minibosses, pirates, chozos, metroids, random
 ```
 
+**Item Progression**
+
+```
+normal, tricky, technical, challenge, desolate
+```
+
 **Starting Items**
 
 ```
