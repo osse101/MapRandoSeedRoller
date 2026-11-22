@@ -29,7 +29,7 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 			resp, err := workflow.Process(request)
 			if err != nil {
 				httpio.WriteJSONResponse(w, http.StatusBadRequest, models.ResponseOut{
-					Status:  "error",
+					Status:  models.StatusError,
 					Message: err.Error(),
 				})
 				return
@@ -38,7 +38,7 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 			rollData, ok := resp.Data.(models.RollResponseData)
 			if !ok {
 				httpio.WriteJSONResponse(w, http.StatusInternalServerError, models.ResponseOut{
-					Status:  "error",
+					Status:  models.StatusError,
 					Message: "unexpected response shape from roll action",
 				})
 				return
@@ -58,7 +58,7 @@ func InertiaHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "MapRando Seed Roller API is running. Please use POST with a preset name.")
 		return
 	}
-	httpio.WriteJSONResponse(w, http.StatusBadRequest, models.ResponseOut{Status: "error", Message: "Bad User-Agent."})
+	httpio.WriteJSONResponse(w, http.StatusBadRequest, models.ResponseOut{Status: models.StatusError, Message: "Bad User-Agent."})
 }
 
 func writeInertiaJSONResponse(w http.ResponseWriter, statusCode int, payload models.InertiaResponseOut) {

@@ -9,6 +9,7 @@ tools/*
 # Docs & agent context
 **/*.md
 .claude/
+AGENTS.md
 todo.txt
 
 # Tests & fixtures

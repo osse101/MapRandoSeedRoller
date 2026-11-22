@@ -139,12 +139,19 @@ from the URL and form-POSTs `spoiler_token` to `{seedURL}/unlock`.
 ## Commands
 
 ```
-make test    # go test ./... -v
-make lint    # golangci-lint via tools/go.mod (separate module)
+make         # list targets
+make check   # fmt-check + vet + lint + test (what CI should run)
+make test    # go test -v ./...   (TESTFLAGS= for quiet)
+make cover   # coverage total
+make lint    # golangci-lint v2 via `go tool -modfile=tools/go.mod` (report only)
+make lint-fix
 make fmt     # go fmt ./...
-make clean   # go clean -testcache
-go build ./...
+make clean   # test cache + coverage files
+make dev     # vercel dev (global CLI)
 ```
+
+`go.mod` has `ignore ./node_modules`: the Vercel CLI's npm packages ship `.go` files
+that otherwise break `./...`.
 
 ## Conventions
 

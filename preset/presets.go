@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const DevVersion = 122
+const DevVersion = 124
 
 var TemplateMap = map[string]string{
 	"s2":           "Community_Race_Season_2.json",
@@ -29,13 +29,13 @@ var TemplateMap = map[string]string{
 	"vmove":        "Winter_Tournament_-_Varia_+_Movement.json",
 	"ammo-balance": "Ammo Balanced Tournament.json",
 	"nis":          "NIS_Very_Hard_Challenge.json",
-	"dee":			"Hard_Tricky_No_Walljump_Hijump_Start.json",
+	"dee":          "Hard_Tricky_No_Walljump_Hijump_Start.json",
 }
 
 //go:embed data/*.json
 var templateFS embed.FS
 
-func LoadTemplate(name string) (map[string]interface{}, error) {
+func LoadTemplate(name string) (map[string]any, error) {
 	fileName, ok := TemplateMap[strings.ToLower(name)]
 	if !ok {
 		return nil, fmt.Errorf("preset '%s' not found", name)
@@ -44,7 +44,7 @@ func LoadTemplate(name string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading preset; %w", err)
 	}
-	var jsonObject map[string]interface{}
+	var jsonObject map[string]any
 	err = json.Unmarshal(template, &jsonObject)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshalling preset; %w", err)
