@@ -31,12 +31,11 @@ func RandomizeHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := workflow.Process(*req)
 	if err != nil {
 		status := http.StatusBadRequest
-		var upstreamErr *randomize.UpstreamError
-		if errors.As(err, &upstreamErr) {
+		if _, ok := errors.AsType[*randomize.UpstreamError](err); ok {
 			status = http.StatusBadGateway
 		}
 		httpio.WriteJSONResponse(w, status, models.ResponseOut{
-			Status:  "error",
+			Status:  models.StatusError,
 			Message: err.Error(),
 		})
 		return

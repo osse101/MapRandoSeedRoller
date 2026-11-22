@@ -1,6 +1,6 @@
 module maprandoseedroller
 
-go 1.26.1
+go 1.27.1
 
 require (
 	github.com/go-openapi/testify/v2 v2.4.2
@@ -8,3 +8,5 @@ require (
 )
 
 require github.com/google/uuid v1.6.0 // indirect
+
+ignore ./node_modules

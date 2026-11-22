@@ -14,7 +14,7 @@ func Process(req models.RequestRaw) (models.ResponseOut, error) {
 	if req.Event != "" {
 		return handleEvent(req)
 	}
-	return models.ResponseOut{Status: "error"}, fmt.Errorf("no action or event specified")
+	return models.ResponseOut{Status: models.StatusError}, fmt.Errorf("no action or event specified")
 }
 
 func handleAction(req models.RequestRaw) (models.ResponseOut, error) {
@@ -22,41 +22,41 @@ func handleAction(req models.RequestRaw) (models.ResponseOut, error) {
 	case "roll":
 		var flags string
 		if err := json.Unmarshal(req.Data, &flags); err != nil {
-			return models.ResponseOut{Status: "error"}, fmt.Errorf("roll action requires string flags")
+			return models.ResponseOut{Status: models.StatusError}, fmt.Errorf("roll action requires string flags")
 		}
 		res, err := ExecuteRoll(flags)
 		if err != nil {
-			return models.ResponseOut{Status: "error"}, err
+			return models.ResponseOut{Status: models.StatusError}, err
 		}
-		return models.ResponseOut{Status: "success", Data: res}, nil
+		return models.ResponseOut{Status: models.StatusSuccess, Data: res}, nil
 
 	case "unlock":
 		var url string
 		if err := json.Unmarshal(req.Data, &url); err != nil {
-			return models.ResponseOut{Status: "error"}, fmt.Errorf("unlock action requires a URL string")
+			return models.ResponseOut{Status: models.StatusError}, fmt.Errorf("unlock action requires a URL string")
 		}
 		if err := ExecuteUnlock(url); err != nil {
-			return models.ResponseOut{Status: "error"}, err
+			return models.ResponseOut{Status: models.StatusError}, err
 		}
-		return models.ResponseOut{Status: "success"}, nil
+		return models.ResponseOut{Status: models.StatusSuccess}, nil
 
 	case "help":
 		msg := GetHelp(req.Source)
-		return models.ResponseOut{Status: "success", Message: msg}, nil
+		return models.ResponseOut{Status: models.StatusSuccess, Message: msg}, nil
 
 	default:
-		return models.ResponseOut{Status: "error"}, fmt.Errorf("unrecognized action: %s", req.Action)
+		return models.ResponseOut{Status: models.StatusError}, fmt.Errorf("unrecognized action: %s", req.Action)
 	}
 }
 
 func handleEvent(req models.RequestRaw) (models.ResponseOut, error) {
 	switch req.Event {
 	case "seed.finished":
-		return models.ResponseOut{Status: "success", Message: "Log acknowledged"}, nil
+		return models.ResponseOut{Status: models.StatusSuccess, Message: "Log acknowledged"}, nil
 	case "system.alert":
-		return models.ResponseOut{Status: "success"}, nil
+		return models.ResponseOut{Status: models.StatusSuccess}, nil
 	default:
 		// Silently acknowledge unknown events to stop webhook retries
-		return models.ResponseOut{Status: "success", Message: "event ignored"}, nil
+		return models.ResponseOut{Status: models.StatusSuccess, Message: "event ignored"}, nil
 	}
 }

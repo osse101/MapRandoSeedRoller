@@ -9,17 +9,23 @@ type RequestRaw struct {
 	Data   json.RawMessage `json:"data"`
 }
 
+// ResponseOut.Status values.
+const (
+	StatusSuccess = "success"
+	StatusError   = "error"
+)
+
 type ResponseOut struct {
-	Status  string      `json:"status"` // "success" or "error"
-	Message string      `json:"message,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
+	Status  string `json:"status"` // StatusSuccess or StatusError
+	Message string `json:"message,omitempty"`
+	Data    any    `json:"data,omitempty"`
 }
 
 type InertiaResponseOut struct {
-	URL     string      `json:"url"`
-	Hash    string      `json:"hash,omitempty"`
-	Message string      `json:"message,omitempty"`
-	Extra   interface{} `json:"extra,omitempty"`
+	URL     string `json:"url"`
+	Hash    string `json:"hash,omitempty"`
+	Message string `json:"message,omitempty"`
+	Extra   any    `json:"extra,omitempty"`
 }
 
 type SeedData struct {
@@ -29,7 +35,7 @@ type SeedData struct {
 
 type RollResponseData struct {
 	SeedData
-	Extra interface{} `json:"extra,omitempty"`
+	Extra any `json:"extra,omitempty"`
 }
 
 type SpriteExtra struct {
@@ -41,9 +47,9 @@ type SpriteExtra struct {
 // the pick chains into that preset's own action, e.g. randompreset landing
 // on nis) that action's own Extra payload nested underneath.
 type PresetSelectionExtra struct {
-	SelectedPreset string      `json:"selected_preset"`
-	StartingItems  []string    `json:"starting_items,omitempty"`
-	Extra          interface{} `json:"extra,omitempty"`
+	SelectedPreset string   `json:"selected_preset"`
+	StartingItems  []string `json:"starting_items,omitempty"`
+	Extra          any      `json:"extra,omitempty"`
 }
 
 type RequestMapRando struct {
